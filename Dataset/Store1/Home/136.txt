@@ -1,0 +1,6 @@
+Name: Table Lamp
+Price: 115.96
+Score: 1.4
+Entity: 40
+
+Last Modified: 2024-11-23 18:50:11

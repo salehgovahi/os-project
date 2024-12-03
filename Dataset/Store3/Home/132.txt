@@ -1,0 +1,6 @@
+Name: Carpet
+Price: 957.21
+Score: 1.4
+Entity: 86
+
+Last Modified: 2024-11-23 18:50:00

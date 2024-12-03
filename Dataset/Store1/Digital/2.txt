@@ -1,0 +1,6 @@
+Name: Laptop
+Price: 256.87
+Score: 1.7
+Entity: 30
+
+Last Modified: 2024-11-23 18:50:11

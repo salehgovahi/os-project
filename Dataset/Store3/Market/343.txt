@@ -1,0 +1,6 @@
+Name: Jam
+Price: 84.95
+Score: 4.7
+Entity: 12
+
+Last Modified: 2024-11-23 18:50:00

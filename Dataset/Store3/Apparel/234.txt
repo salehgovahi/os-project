@@ -1,0 +1,6 @@
+Name: Wide-Leg Pants
+Price: 271.75
+Score: 3.9
+Entity: 81
+
+Last Modified: 2024-11-23 18:50:00

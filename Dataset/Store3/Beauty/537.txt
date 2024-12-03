@@ -1,0 +1,6 @@
+Name: Hair Conditioner
+Price: 214.17
+Score: 1.2
+Entity: 87
+
+Last Modified: 2024-11-23 18:50:00

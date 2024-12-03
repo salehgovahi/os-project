@@ -1,0 +1,6 @@
+Name: iPhone11
+Price: 282.48
+Score: 1.6
+Entity: 12
+
+Last Modified: 2024-11-23 18:49:27

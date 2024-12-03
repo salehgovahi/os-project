@@ -1,0 +1,6 @@
+Name: Gloves
+Price: 302.56
+Score: 1.9
+Entity: 98
+
+Last Modified: 2024-11-23 18:50:00

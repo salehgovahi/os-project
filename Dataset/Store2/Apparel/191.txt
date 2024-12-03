@@ -1,0 +1,6 @@
+Name: Tuxedo
+Price: 87.22
+Score: 4.4
+Entity: 49
+
+Last Modified: 2024-11-23 18:49:27

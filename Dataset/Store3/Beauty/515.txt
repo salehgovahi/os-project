@@ -1,0 +1,6 @@
+Name: Face Powder
+Price: 507.35
+Score: 2.6
+Entity: 39
+
+Last Modified: 2024-11-23 18:50:00

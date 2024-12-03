@@ -1,0 +1,6 @@
+Name: V-Neck Sweater
+Price: 375.78
+Score: 1.4
+Entity: 15
+
+Last Modified: 2024-11-23 18:50:11

@@ -1,0 +1,6 @@
+Name: E-Reader
+Price: 571.63
+Score: 1.0
+Entity: 30
+
+Last Modified: 2024-11-23 18:50:11

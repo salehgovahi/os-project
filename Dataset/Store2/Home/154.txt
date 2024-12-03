@@ -1,0 +1,6 @@
+Name: Patio Heater
+Price: 18.46
+Score: 1.2
+Entity: 91
+
+Last Modified: 2024-11-23 18:49:27

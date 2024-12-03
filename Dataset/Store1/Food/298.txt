@@ -1,0 +1,6 @@
+Name: Iced Tea
+Price: 13.65
+Score: 3.7
+Entity: 55
+
+Last Modified: 2024-11-23 18:50:11

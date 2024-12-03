@@ -1,0 +1,6 @@
+Name: Kitchen Stool
+Price: 42.19
+Score: 1.3
+Entity: 67
+
+Last Modified: 2024-11-23 18:50:11

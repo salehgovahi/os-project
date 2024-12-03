@@ -1,0 +1,6 @@
+Name: Yogurt
+Price: 197.86
+Score: 2.3
+Entity: 26
+
+Last Modified: 2024-11-23 18:49:27

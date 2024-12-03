@@ -1,0 +1,6 @@
+Name: Double Cheeseburger
+Price: 862.25
+Score: 2.2
+Entity: 65
+
+Last Modified: 2024-11-23 18:50:00

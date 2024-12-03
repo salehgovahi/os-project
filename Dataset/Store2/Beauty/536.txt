@@ -1,0 +1,6 @@
+Name: Hair Shampoo
+Price: 924.55
+Score: 4.3
+Entity: 67
+
+Last Modified: 2024-11-23 18:49:27

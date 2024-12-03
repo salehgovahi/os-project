@@ -1,0 +1,6 @@
+Name: Chicken Sandwich
+Price: 470.49
+Score: 3.4
+Entity: 76
+
+Last Modified: 2024-11-23 18:50:00

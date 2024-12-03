@@ -1,0 +1,6 @@
+Name: Wheat Flour
+Price: 529.5
+Score: 4.2
+Entity: 10
+
+Last Modified: 2024-11-23 18:50:00

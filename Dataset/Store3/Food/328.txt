@@ -1,0 +1,6 @@
+Name: Tortilla Chips with Salsa
+Price: 688.04
+Score: 2.5
+Entity: 33
+
+Last Modified: 2024-11-23 18:50:00

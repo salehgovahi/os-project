@@ -1,0 +1,6 @@
+Name: Coffee Beans
+Price: 837.44
+Score: 1.9
+Entity: 24
+
+Last Modified: 2024-11-23 18:49:27

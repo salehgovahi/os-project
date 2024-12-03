@@ -1,0 +1,6 @@
+Name: Foam Sword
+Price: 355.54
+Score: 1.4
+Entity: 11
+
+Last Modified: 2024-11-23 18:50:11

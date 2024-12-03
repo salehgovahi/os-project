@@ -1,0 +1,6 @@
+Name: Powdered Milk
+Price: 293.34
+Score: 1.6
+Entity: 26
+
+Last Modified: 2024-11-23 18:49:27

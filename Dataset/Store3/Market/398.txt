@@ -1,0 +1,6 @@
+Name: Pumpkin Seeds
+Price: 535.59
+Score: 1.6
+Entity: 17
+
+Last Modified: 2024-11-23 18:50:00

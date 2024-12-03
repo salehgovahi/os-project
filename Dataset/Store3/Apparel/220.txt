@@ -1,0 +1,6 @@
+Name: Caftan
+Price: 235.85
+Score: 4.1
+Entity: 76
+
+Last Modified: 2024-11-23 18:50:00

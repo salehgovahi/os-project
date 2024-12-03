@@ -1,0 +1,6 @@
+Name: Rice
+Price: 936.2
+Score: 4.2
+Entity: 47
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: Toy House
+Price: 394.93
+Score: 3.9
+Entity: 100
+
+Last Modified: 2024-11-23 18:50:11

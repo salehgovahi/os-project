@@ -1,0 +1,6 @@
+Name: Egg and Cheese Muffin
+Price: 82.88
+Score: 2.1
+Entity: 53
+
+Last Modified: 2024-11-23 18:50:00

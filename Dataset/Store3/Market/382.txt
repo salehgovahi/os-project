@@ -1,0 +1,6 @@
+Name: Spices
+Price: 12.98
+Score: 2.7
+Entity: 21
+
+Last Modified: 2024-11-23 18:50:00

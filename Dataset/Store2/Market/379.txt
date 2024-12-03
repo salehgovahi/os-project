@@ -1,0 +1,6 @@
+Name: Mints
+Price: 73.51
+Score: 1.3
+Entity: 38
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: Camping Tent
+Price: 567.47
+Score: 1.6
+Entity: 40
+
+Last Modified: 2024-11-23 18:49:27

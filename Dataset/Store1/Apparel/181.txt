@@ -1,0 +1,6 @@
+Name: Polo Shirt
+Price: 720.22
+Score: 4.3
+Entity: 36
+
+Last Modified: 2024-11-23 18:50:11

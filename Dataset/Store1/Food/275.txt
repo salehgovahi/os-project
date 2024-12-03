@@ -1,0 +1,6 @@
+Name: Hash Browns
+Price: 428.3
+Score: 1.9
+Entity: 45
+
+Last Modified: 2024-11-23 18:50:11

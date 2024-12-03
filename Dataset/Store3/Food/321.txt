@@ -1,0 +1,6 @@
+Name: Gyro Sandwich
+Price: 113.56
+Score: 1.2
+Entity: 65
+
+Last Modified: 2024-11-23 18:50:00

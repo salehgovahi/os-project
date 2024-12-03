@@ -1,0 +1,6 @@
+Name: Lemonade
+Price: 153.41
+Score: 5.0
+Entity: 76
+
+Last Modified: 2024-11-23 18:50:00

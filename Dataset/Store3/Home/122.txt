@@ -1,0 +1,6 @@
+Name: Coat Rack
+Price: 547.62
+Score: 1.5
+Entity: 84
+
+Last Modified: 2024-11-23 18:50:00

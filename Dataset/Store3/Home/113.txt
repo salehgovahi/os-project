@@ -1,0 +1,6 @@
+Name: Entryway Bench
+Price: 522.01
+Score: 2.0
+Entity: 7
+
+Last Modified: 2024-11-23 18:50:00

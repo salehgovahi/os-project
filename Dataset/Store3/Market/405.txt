@@ -1,0 +1,6 @@
+Name: Coconut Milk
+Price: 805.98
+Score: 4.0
+Entity: 25
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Dining Table
+Price: 420.18
+Score: 4.1
+Entity: 85
+
+Last Modified: 2024-11-23 18:49:27

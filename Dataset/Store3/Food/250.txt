@@ -1,0 +1,6 @@
+Name: Chicken Nuggets
+Price: 642.54
+Score: 3.9
+Entity: 23
+
+Last Modified: 2024-11-23 18:50:00

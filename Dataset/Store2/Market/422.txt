@@ -1,0 +1,6 @@
+Name: Ground Coffee
+Price: 759.45
+Score: 1.4
+Entity: 39
+
+Last Modified: 2024-11-23 18:49:27

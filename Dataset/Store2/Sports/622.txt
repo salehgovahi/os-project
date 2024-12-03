@@ -1,0 +1,6 @@
+Name: Shorts
+Price: 356.41
+Score: 2.5
+Entity: 77
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: Dash Cam
+Price: 283.44
+Score: 2.2
+Entity: 86
+
+Last Modified: 2024-11-23 18:50:00

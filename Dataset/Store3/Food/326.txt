@@ -1,0 +1,6 @@
+Name: Trail Mix
+Price: 92.98
+Score: 2.3
+Entity: 60
+
+Last Modified: 2024-11-23 18:50:00

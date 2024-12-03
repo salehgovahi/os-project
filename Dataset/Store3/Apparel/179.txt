@@ -1,0 +1,6 @@
+Name: Blouse
+Price: 79.87
+Score: 4.4
+Entity: 9
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Smart Water Bottle
+Price: 225.5
+Score: 2.9
+Entity: 68
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: Heat Protection Spray
+Price: 166.36
+Score: 4.5
+Entity: 97
+
+Last Modified: 2024-11-23 18:50:00

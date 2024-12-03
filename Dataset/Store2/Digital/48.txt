@@ -1,0 +1,6 @@
+Name: Smart Doorbell
+Price: 250.92
+Score: 1.6
+Entity: 84
+
+Last Modified: 2024-11-23 18:49:27

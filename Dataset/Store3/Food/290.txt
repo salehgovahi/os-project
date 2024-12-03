@@ -1,0 +1,6 @@
+Name: Cheesecake
+Price: 810.21
+Score: 2.7
+Entity: 96
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Scrabble
+Price: 424.48
+Score: 1.2
+Entity: 80
+
+Last Modified: 2024-11-23 18:50:11

@@ -1,0 +1,6 @@
+Name: Teddy Bear
+Price: 838.6
+Score: 3.3
+Entity: 32
+
+Last Modified: 2024-11-23 18:49:27

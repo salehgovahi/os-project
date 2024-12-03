@@ -1,0 +1,6 @@
+Name: Murphy Bed
+Price: 178.75
+Score: 2.4
+Entity: 12
+
+Last Modified: 2024-11-23 18:50:11

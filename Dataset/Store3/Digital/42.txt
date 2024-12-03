@@ -1,0 +1,6 @@
+Name: Gaming Chair
+Price: 679.79
+Score: 2.1
+Entity: 74
+
+Last Modified: 2024-11-23 18:50:00

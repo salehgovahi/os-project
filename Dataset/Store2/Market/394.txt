@@ -1,0 +1,6 @@
+Name: Almonds
+Price: 363.35
+Score: 4.2
+Entity: 19
+
+Last Modified: 2024-11-23 18:49:27

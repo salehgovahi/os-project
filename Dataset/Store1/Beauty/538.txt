@@ -1,0 +1,6 @@
+Name: Hair Serum
+Price: 485.48
+Score: 4.1
+Entity: 75
+
+Last Modified: 2024-11-23 18:50:11

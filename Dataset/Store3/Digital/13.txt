@@ -1,0 +1,6 @@
+Name: iPhone14
+Price: 302.23
+Score: 3.8
+Entity: 43
+
+Last Modified: 2024-11-23 18:50:00

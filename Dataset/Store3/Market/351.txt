@@ -1,0 +1,6 @@
+Name: Bread
+Price: 916.71
+Score: 1.7
+Entity: 20
+
+Last Modified: 2024-11-23 18:50:00

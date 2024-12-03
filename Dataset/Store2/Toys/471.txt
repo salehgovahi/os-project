@@ -1,0 +1,6 @@
+Name: Toy Camera
+Price: 242.46
+Score: 4.5
+Entity: 45
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: iPhone13
+Price: 219.64
+Score: 1.1
+Entity: 1
+
+Last Modified: 2024-11-23 18:50:11

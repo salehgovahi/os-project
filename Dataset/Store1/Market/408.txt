@@ -1,0 +1,6 @@
+Name: Vegetable Stock
+Price: 434.2
+Score: 3.9
+Entity: 29
+
+Last Modified: 2024-11-23 18:50:11

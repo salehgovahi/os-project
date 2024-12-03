@@ -1,0 +1,6 @@
+Name: Mini Fridge
+Price: 662.71
+Score: 3.1
+Entity: 84
+
+Last Modified: 2024-11-23 18:49:27

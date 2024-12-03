@@ -1,0 +1,6 @@
+Name: Soup Mix
+Price: 607.58
+Score: 1.6
+Entity: 59
+
+Last Modified: 2024-11-23 18:50:11

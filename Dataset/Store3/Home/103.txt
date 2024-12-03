@@ -1,0 +1,6 @@
+Name: Chaise Lounge
+Price: 389.09
+Score: 2.8
+Entity: 88
+
+Last Modified: 2024-11-23 18:50:00

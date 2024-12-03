@@ -1,0 +1,6 @@
+Name: Checkers
+Price: 342.14
+Score: 1.6
+Entity: 71
+
+Last Modified: 2024-11-23 18:49:27

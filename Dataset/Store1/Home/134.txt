@@ -1,0 +1,6 @@
+Name: Floor Lamp
+Price: 828.78
+Score: 1.7
+Entity: 8
+
+Last Modified: 2024-11-23 18:50:11

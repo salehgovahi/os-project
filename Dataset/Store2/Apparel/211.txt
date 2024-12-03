@@ -1,0 +1,6 @@
+Name: Slippers
+Price: 791.31
+Score: 3.5
+Entity: 85
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: Hoodie
+Price: 143.08
+Score: 4.9
+Entity: 4
+
+Last Modified: 2024-11-23 18:50:11

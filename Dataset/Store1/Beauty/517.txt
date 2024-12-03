@@ -1,0 +1,6 @@
+Name: Lip Gloss
+Price: 528.48
+Score: 3.2
+Entity: 23
+
+Last Modified: 2024-11-23 18:50:11

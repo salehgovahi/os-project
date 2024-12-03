@@ -1,0 +1,6 @@
+Name: Exfoliator
+Price: 306.2
+Score: 2.2
+Entity: 40
+
+Last Modified: 2024-11-23 18:50:00

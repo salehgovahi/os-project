@@ -1,0 +1,6 @@
+Name: 3D Printer
+Price: 304.57
+Score: 3.7
+Entity: 95
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Mascara
+Price: 172.53
+Score: 3.9
+Entity: 32
+
+Last Modified: 2024-11-23 18:50:11

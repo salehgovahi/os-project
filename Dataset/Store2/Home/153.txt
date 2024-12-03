@@ -1,0 +1,6 @@
+Name: Bedside Chest
+Price: 540.2
+Score: 1.2
+Entity: 50
+
+Last Modified: 2024-11-23 18:49:27

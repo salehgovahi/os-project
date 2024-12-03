@@ -1,0 +1,6 @@
+Name: Cupcake
+Price: 335.6
+Score: 3.6
+Entity: 74
+
+Last Modified: 2024-11-23 18:50:00

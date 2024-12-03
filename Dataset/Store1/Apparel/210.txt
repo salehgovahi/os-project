@@ -1,0 +1,6 @@
+Name: Leather Jacket
+Price: 57.03
+Score: 1.7
+Entity: 67
+
+Last Modified: 2024-11-23 18:50:11

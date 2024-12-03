@@ -1,0 +1,6 @@
+Name: Face Wash
+Price: 691.93
+Score: 1.2
+Entity: 97
+
+Last Modified: 2024-11-23 18:50:00

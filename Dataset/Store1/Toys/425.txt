@@ -1,0 +1,6 @@
+Name: Action Figure
+Price: 531.42
+Score: 3.9
+Entity: 55
+
+Last Modified: 2024-11-23 18:50:11

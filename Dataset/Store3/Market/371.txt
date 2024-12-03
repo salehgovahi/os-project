@@ -1,0 +1,6 @@
+Name: Burger Patties
+Price: 972.39
+Score: 2.5
+Entity: 72
+
+Last Modified: 2024-11-23 18:50:00

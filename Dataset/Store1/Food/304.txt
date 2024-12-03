@@ -1,0 +1,6 @@
+Name: Hot Chocolate
+Price: 934.1
+Score: 1.6
+Entity: 50
+
+Last Modified: 2024-11-23 18:50:11

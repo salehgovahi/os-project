@@ -1,0 +1,6 @@
+Name: Teriyaki Chicken Bowl
+Price: 151.68
+Score: 1.9
+Entity: 54
+
+Last Modified: 2024-11-23 18:49:27

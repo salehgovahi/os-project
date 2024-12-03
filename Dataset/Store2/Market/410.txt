@@ -1,0 +1,6 @@
+Name: Beef Stock
+Price: 443.38
+Score: 1.4
+Entity: 91
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: Sweater
+Price: 902.55
+Score: 2.0
+Entity: 33
+
+Last Modified: 2024-11-23 18:50:00

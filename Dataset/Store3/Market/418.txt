@@ -1,0 +1,6 @@
+Name: Canned Fish
+Price: 766.24
+Score: 1.4
+Entity: 31
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Detangler Spray
+Price: 314.98
+Score: 3.2
+Entity: 58
+
+Last Modified: 2024-11-23 18:50:00

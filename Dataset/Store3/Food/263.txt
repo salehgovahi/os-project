@@ -1,0 +1,6 @@
+Name: Margherita Pizza
+Price: 368.15
+Score: 2.5
+Entity: 95
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Jumpsuit
+Price: 961.24
+Score: 1.2
+Entity: 52
+
+Last Modified: 2024-11-23 18:50:00

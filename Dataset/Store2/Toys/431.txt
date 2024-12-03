@@ -1,0 +1,6 @@
+Name: Lego Set
+Price: 406.02
+Score: 1.7
+Entity: 82
+
+Last Modified: 2024-11-23 18:49:27

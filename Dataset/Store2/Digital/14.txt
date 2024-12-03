@@ -1,0 +1,6 @@
+Name: Galaxy S23
+Price: 224.01
+Score: 1.1
+Entity: 96
+
+Last Modified: 2024-11-23 18:49:27

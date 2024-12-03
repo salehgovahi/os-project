@@ -1,0 +1,6 @@
+Name: Bacon Burger
+Price: 183.3
+Score: 1.7
+Entity: 57
+
+Last Modified: 2024-11-23 18:49:27

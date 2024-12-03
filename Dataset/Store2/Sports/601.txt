@@ -1,0 +1,6 @@
+Name: Kayak
+Price: 701.58
+Score: 3.7
+Entity: 69
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: Fanny Pack
+Price: 123.33
+Score: 1.2
+Entity: 73
+
+Last Modified: 2024-11-23 18:50:00

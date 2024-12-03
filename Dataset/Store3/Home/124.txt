@@ -1,0 +1,6 @@
+Name: Outdoor Sofa
+Price: 906.54
+Score: 1.5
+Entity: 28
+
+Last Modified: 2024-11-23 18:50:00

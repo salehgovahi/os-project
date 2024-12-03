@@ -1,0 +1,6 @@
+Name: Sweet Tea
+Price: 530.79
+Score: 2.1
+Entity: 30
+
+Last Modified: 2024-11-23 18:49:27

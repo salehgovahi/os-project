@@ -1,0 +1,6 @@
+Name: Biker Jacket
+Price: 797.23
+Score: 2.2
+Entity: 74
+
+Last Modified: 2024-11-23 18:50:00

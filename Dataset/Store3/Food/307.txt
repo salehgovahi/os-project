@@ -1,0 +1,6 @@
+Name: Energy Drink
+Price: 823.44
+Score: 1.8
+Entity: 78
+
+Last Modified: 2024-11-23 18:50:00

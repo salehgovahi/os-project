@@ -1,0 +1,6 @@
+Name: Robot Vacuum
+Price: 296.8
+Score: 4.4
+Entity: 41
+
+Last Modified: 2024-11-23 18:50:11

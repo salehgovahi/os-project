@@ -1,0 +1,6 @@
+Name: Electric Fan
+Price: 510.71
+Score: 4.7
+Entity: 85
+
+Last Modified: 2024-11-23 18:49:27

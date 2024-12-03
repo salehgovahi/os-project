@@ -1,0 +1,6 @@
+Name: Ice Cream
+Price: 373.71
+Score: 3.6
+Entity: 41
+
+Last Modified: 2024-11-23 18:50:11

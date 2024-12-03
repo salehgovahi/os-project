@@ -1,0 +1,6 @@
+Name: Cinnamon
+Price: 474.62
+Score: 2.3
+Entity: 83
+
+Last Modified: 2024-11-23 18:50:11

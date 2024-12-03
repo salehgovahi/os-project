@@ -1,0 +1,6 @@
+Name: Milkshake
+Price: 176.85
+Score: 4.8
+Entity: 80
+
+Last Modified: 2024-11-23 18:49:27

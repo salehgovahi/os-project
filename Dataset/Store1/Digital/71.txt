@@ -1,0 +1,6 @@
+Name: Smart Backpack
+Price: 437.74
+Score: 1.7
+Entity: 20
+
+Last Modified: 2024-11-23 18:50:11

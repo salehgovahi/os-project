@@ -1,0 +1,6 @@
+Name: Turmeric
+Price: 256.46
+Score: 1.6
+Entity: 38
+
+Last Modified: 2024-11-23 18:49:27

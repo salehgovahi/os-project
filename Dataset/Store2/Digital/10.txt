@@ -1,0 +1,6 @@
+Name: Speaker
+Price: 57.87
+Score: 2.4
+Entity: 91
+
+Last Modified: 2024-11-23 18:49:27

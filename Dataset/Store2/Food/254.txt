@@ -1,0 +1,6 @@
+Name: Sweet Potato Fries
+Price: 764.26
+Score: 4.5
+Entity: 1
+
+Last Modified: 2024-11-23 18:49:27

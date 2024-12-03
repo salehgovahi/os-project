@@ -1,0 +1,6 @@
+Name: Hair Mousse
+Price: 581.89
+Score: 1.0
+Entity: 89
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: Table Tennis Paddle
+Price: 20.55
+Score: 4.5
+Entity: 29
+
+Last Modified: 2024-11-23 18:50:11

@@ -1,0 +1,6 @@
+Name: Mozzarella Sticks
+Price: 740.78
+Score: 3.6
+Entity: 27
+
+Last Modified: 2024-11-23 18:50:00

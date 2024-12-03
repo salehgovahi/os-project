@@ -1,0 +1,6 @@
+Name: Kimono
+Price: 439.25
+Score: 4.0
+Entity: 67
+
+Last Modified: 2024-11-23 18:50:11

@@ -1,0 +1,6 @@
+Name: Shrug
+Price: 634.77
+Score: 4.8
+Entity: 82
+
+Last Modified: 2024-11-23 18:49:27

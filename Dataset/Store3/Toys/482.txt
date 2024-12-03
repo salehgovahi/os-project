@@ -1,0 +1,6 @@
+Name: Action Hero Figure
+Price: 267.15
+Score: 3.9
+Entity: 17
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Hiking Boots
+Price: 745.1
+Score: 4.2
+Entity: 39
+
+Last Modified: 2024-11-23 18:50:11

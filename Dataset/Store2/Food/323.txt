@@ -1,0 +1,6 @@
+Name: Potato Chips
+Price: 796.19
+Score: 1.1
+Entity: 74
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: Smart Showerhead
+Price: 324.51
+Score: 4.8
+Entity: 98
+
+Last Modified: 2024-11-23 18:49:27

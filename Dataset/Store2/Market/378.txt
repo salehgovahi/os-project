@@ -1,0 +1,6 @@
+Name: Lollipops
+Price: 556.15
+Score: 3.8
+Entity: 5
+
+Last Modified: 2024-11-23 18:49:27

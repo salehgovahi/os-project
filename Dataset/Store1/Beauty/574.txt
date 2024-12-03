@@ -1,0 +1,6 @@
+Name: Hair Curler
+Price: 111.64
+Score: 1.2
+Entity: 14
+
+Last Modified: 2024-11-23 18:50:11

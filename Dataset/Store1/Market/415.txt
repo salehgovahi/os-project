@@ -1,0 +1,6 @@
+Name: Fruit Juice
+Price: 300.5
+Score: 1.2
+Entity: 98
+
+Last Modified: 2024-11-23 18:50:11

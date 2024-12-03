@@ -1,0 +1,6 @@
+Name: Parkas
+Price: 352.34
+Score: 1.8
+Entity: 67
+
+Last Modified: 2024-11-23 18:50:00

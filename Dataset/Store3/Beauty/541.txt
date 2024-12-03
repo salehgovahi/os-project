@@ -1,0 +1,6 @@
+Name: Dry Shampoo
+Price: 882.39
+Score: 3.5
+Entity: 67
+
+Last Modified: 2024-11-23 18:50:00

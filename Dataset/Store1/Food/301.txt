@@ -1,0 +1,6 @@
+Name: Latte
+Price: 256.64
+Score: 2.9
+Entity: 71
+
+Last Modified: 2024-11-23 18:50:11

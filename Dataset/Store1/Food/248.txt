@@ -1,0 +1,6 @@
+Name: Veggie Burger
+Price: 383.04
+Score: 1.6
+Entity: 69
+
+Last Modified: 2024-11-23 18:50:11

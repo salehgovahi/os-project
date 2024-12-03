@@ -1,0 +1,6 @@
+Name: Cuticle Oil
+Price: 950.21
+Score: 1.8
+Entity: 76
+
+Last Modified: 2024-11-23 18:50:00

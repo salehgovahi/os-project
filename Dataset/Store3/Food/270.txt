@@ -1,0 +1,6 @@
+Name: Breakfast Burrito
+Price: 778.33
+Score: 4.9
+Entity: 51
+
+Last Modified: 2024-11-23 18:50:00

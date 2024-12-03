@@ -1,0 +1,6 @@
+Name: Guacamole Dip
+Price: 647.49
+Score: 2.8
+Entity: 70
+
+Last Modified: 2024-11-23 18:50:00

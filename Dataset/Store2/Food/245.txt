@@ -1,0 +1,6 @@
+Name: Hot Dog
+Price: 816.75
+Score: 3.3
+Entity: 1
+
+Last Modified: 2024-11-23 18:49:27

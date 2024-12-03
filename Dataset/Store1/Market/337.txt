@@ -1,0 +1,6 @@
+Name: Butter
+Price: 346.58
+Score: 3.6
+Entity: 95
+
+Last Modified: 2024-11-23 18:50:11

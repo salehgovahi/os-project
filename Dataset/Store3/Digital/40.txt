@@ -1,0 +1,6 @@
+Name: Smart Thermostat
+Price: 52.32
+Score: 3.5
+Entity: 96
+
+Last Modified: 2024-11-23 18:50:00

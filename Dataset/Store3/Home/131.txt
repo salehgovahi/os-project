@@ -1,0 +1,6 @@
+Name: Rug
+Price: 888.4
+Score: 3.3
+Entity: 87
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Raincoat
+Price: 888.18
+Score: 1.0
+Entity: 77
+
+Last Modified: 2024-11-23 18:50:00

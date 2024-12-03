@@ -1,0 +1,6 @@
+Name: Root Beer
+Price: 203.23
+Score: 1.1
+Entity: 50
+
+Last Modified: 2024-11-23 18:50:00

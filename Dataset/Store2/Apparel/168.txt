@@ -1,0 +1,6 @@
+Name: Leggings
+Price: 568.05
+Score: 3.5
+Entity: 37
+
+Last Modified: 2024-11-23 18:49:27

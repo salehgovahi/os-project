@@ -1,0 +1,6 @@
+Name: Hair Straightener
+Price: 876.53
+Score: 4.0
+Entity: 18
+
+Last Modified: 2024-11-23 18:49:27

@@ -1,0 +1,6 @@
+Name: LED Strip Lights
+Price: 501.0
+Score: 1.0
+Entity: 9
+
+Last Modified: 2024-11-23 18:50:00

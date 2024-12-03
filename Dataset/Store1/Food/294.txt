@@ -1,0 +1,6 @@
+Name: Cola
+Price: 245.05
+Score: 2.3
+Entity: 22
+
+Last Modified: 2024-11-23 18:50:11

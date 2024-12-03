@@ -1,0 +1,6 @@
+Name: Chips
+Price: 226.39
+Score: 4.4
+Entity: 5
+
+Last Modified: 2024-11-23 18:50:00

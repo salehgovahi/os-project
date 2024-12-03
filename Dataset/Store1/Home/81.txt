@@ -1,0 +1,6 @@
+Name: Coffee Table
+Price: 216.4
+Score: 1.8
+Entity: 63
+
+Last Modified: 2024-11-23 18:50:11

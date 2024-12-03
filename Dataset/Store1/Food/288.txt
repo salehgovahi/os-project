@@ -1,0 +1,6 @@
+Name: Chocolate Chip Cookie
+Price: 593.28
+Score: 2.8
+Entity: 85
+
+Last Modified: 2024-11-23 18:50:11

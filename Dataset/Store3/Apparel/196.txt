@@ -1,0 +1,6 @@
+Name: Loafers
+Price: 540.2
+Score: 1.4
+Entity: 14
+
+Last Modified: 2024-11-23 18:50:00

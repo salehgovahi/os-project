@@ -1,0 +1,6 @@
+Name: Desk Lamp
+Price: 354.55
+Score: 4.1
+Entity: 77
+
+Last Modified: 2024-11-23 18:49:27

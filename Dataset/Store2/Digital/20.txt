@@ -1,0 +1,6 @@
+Name: Kindle Paperwhite
+Price: 582.38
+Score: 1.5
+Entity: 40
+
+Last Modified: 2024-11-23 18:49:27

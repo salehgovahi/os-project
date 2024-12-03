@@ -1,0 +1,6 @@
+Name: Tea
+Price: 198.77
+Score: 1.3
+Entity: 77
+
+Last Modified: 2024-11-23 18:50:00

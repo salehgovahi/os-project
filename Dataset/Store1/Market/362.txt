@@ -1,0 +1,6 @@
+Name: Ketchup
+Price: 468.94
+Score: 1.2
+Entity: 88
+
+Last Modified: 2024-11-23 18:50:11

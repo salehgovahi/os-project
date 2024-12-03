@@ -1,0 +1,6 @@
+Name: Face Mask
+Price: 664.31
+Score: 1.5
+Entity: 32
+
+Last Modified: 2024-11-23 18:50:00

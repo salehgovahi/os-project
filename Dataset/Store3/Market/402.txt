@@ -1,0 +1,6 @@
+Name: Oats
+Price: 88.13
+Score: 1.9
+Entity: 80
+
+Last Modified: 2024-11-23 18:50:00

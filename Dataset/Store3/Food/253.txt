@@ -1,0 +1,6 @@
+Name: Curly Fries
+Price: 518.82
+Score: 3.8
+Entity: 94
+
+Last Modified: 2024-11-23 18:50:00

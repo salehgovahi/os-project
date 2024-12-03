@@ -1,0 +1,6 @@
+Name: Candies
+Price: 593.31
+Score: 2.7
+Entity: 90
+
+Last Modified: 2024-11-23 18:50:11

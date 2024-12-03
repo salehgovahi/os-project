@@ -1,0 +1,6 @@
+Name: Tights
+Price: 593.94
+Score: 2.7
+Entity: 40
+
+Last Modified: 2024-11-23 18:50:00

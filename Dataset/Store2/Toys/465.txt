@@ -1,0 +1,6 @@
+Name: Toy Telescope
+Price: 383.25
+Score: 3.6
+Entity: 36
+
+Last Modified: 2024-11-23 18:49:27

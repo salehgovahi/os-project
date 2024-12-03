@@ -1,0 +1,6 @@
+Name: Blazer
+Price: 680.67
+Score: 4.8
+Entity: 33
+
+Last Modified: 2024-11-23 18:50:00

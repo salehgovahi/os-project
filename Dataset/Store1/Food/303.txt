@@ -1,0 +1,6 @@
+Name: Espresso
+Price: 897.2
+Score: 3.7
+Entity: 99
+
+Last Modified: 2024-11-23 18:50:11

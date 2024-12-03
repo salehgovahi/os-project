@@ -1,0 +1,6 @@
+Name: WhiteShoes
+Price: 254.18
+Score: 3.8
+Entity: 72
+
+Last Modified: 2024-11-23 18:49:27

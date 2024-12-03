@@ -1,0 +1,6 @@
+Name: Infinity Scarf
+Price: 130.33
+Score: 1.8
+Entity: 61
+
+Last Modified: 2024-11-23 18:50:00

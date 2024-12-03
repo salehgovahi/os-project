@@ -1,0 +1,6 @@
+Name: RC Helicopter
+Price: 54.39
+Score: 4.3
+Entity: 50
+
+Last Modified: 2024-11-23 18:50:00

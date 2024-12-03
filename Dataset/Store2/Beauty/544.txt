@@ -1,0 +1,6 @@
+Name: Hair Wax
+Price: 471.78
+Score: 4.7
+Entity: 41
+
+Last Modified: 2024-11-23 18:49:27

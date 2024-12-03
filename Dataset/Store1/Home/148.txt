@@ -1,0 +1,6 @@
+Name: Electric Heater
+Price: 966.0
+Score: 4.1
+Entity: 81
+
+Last Modified: 2024-11-23 18:50:11

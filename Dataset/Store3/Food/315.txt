@@ -1,0 +1,6 @@
+Name: Pad Thai
+Price: 475.57
+Score: 3.5
+Entity: 81
+
+Last Modified: 2024-11-23 18:50:00

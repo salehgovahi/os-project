@@ -1,0 +1,6 @@
+Name: Cereal
+Price: 772.19
+Score: 1.1
+Entity: 7
+
+Last Modified: 2024-11-23 18:49:27

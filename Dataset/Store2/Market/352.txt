@@ -1,0 +1,6 @@
+Name: Pasta
+Price: 288.25
+Score: 4.4
+Entity: 3
+
+Last Modified: 2024-11-23 18:49:27

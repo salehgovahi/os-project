@@ -1,0 +1,6 @@
+Name: Bow and Arrow Set
+Price: 67.73
+Score: 4.7
+Entity: 81
+
+Last Modified: 2024-11-23 18:50:00

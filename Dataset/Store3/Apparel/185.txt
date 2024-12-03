@@ -1,0 +1,6 @@
+Name: Denim Jacket
+Price: 511.82
+Score: 3.2
+Entity: 84
+
+Last Modified: 2024-11-23 18:50:00

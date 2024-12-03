@@ -1,0 +1,6 @@
+Name: Garden Bench
+Price: 447.75
+Score: 4.1
+Entity: 6
+
+Last Modified: 2024-11-23 18:49:27

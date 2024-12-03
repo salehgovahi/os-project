@@ -1,0 +1,6 @@
+Name: Blouse with Frills
+Price: 811.11
+Score: 3.8
+Entity: 80
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Tablet
+Price: 433.58
+Score: 1.3
+Entity: 63
+
+Last Modified: 2024-11-23 18:49:27

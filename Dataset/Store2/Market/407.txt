@@ -1,0 +1,6 @@
+Name: Almond Milk
+Price: 631.07
+Score: 4.3
+Entity: 22
+
+Last Modified: 2024-11-23 18:49:27

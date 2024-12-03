@@ -1,0 +1,6 @@
+Name: MacBook Air
+Price: 470.1
+Score: 2.2
+Entity: 68
+
+Last Modified: 2024-11-23 18:50:00

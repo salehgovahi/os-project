@@ -1,0 +1,6 @@
+Name: Area Rug
+Price: 555.14
+Score: 1.2
+Entity: 79
+
+Last Modified: 2024-11-23 18:50:00

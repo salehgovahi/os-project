@@ -1,0 +1,6 @@
+Name: Ceiling Fan
+Price: 361.55
+Score: 3.2
+Entity: 77
+
+Last Modified: 2024-11-23 18:50:11

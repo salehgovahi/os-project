@@ -1,0 +1,6 @@
+Name: Fishing Rod
+Price: 454.25
+Score: 1.8
+Entity: 20
+
+Last Modified: 2024-11-23 18:50:11

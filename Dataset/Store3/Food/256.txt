@@ -1,0 +1,6 @@
+Name: Onion Rings
+Price: 65.05
+Score: 4.8
+Entity: 93
+
+Last Modified: 2024-11-23 18:50:00

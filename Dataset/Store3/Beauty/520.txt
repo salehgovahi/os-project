@@ -1,0 +1,6 @@
+Name: Nail Polish
+Price: 268.37
+Score: 2.7
+Entity: 86
+
+Last Modified: 2024-11-23 18:50:00

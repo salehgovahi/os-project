@@ -1,0 +1,6 @@
+Name: Camera
+Price: 751.25
+Score: 4.4
+Entity: 75
+
+Last Modified: 2024-11-23 18:50:11

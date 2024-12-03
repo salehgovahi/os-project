@@ -1,0 +1,6 @@
+Name: Cape Coat
+Price: 122.69
+Score: 3.2
+Entity: 52
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Philly Cheesesteak
+Price: 526.74
+Score: 1.5
+Entity: 14
+
+Last Modified: 2024-11-23 18:50:11

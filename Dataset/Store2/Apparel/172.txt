@@ -1,0 +1,6 @@
+Name: Cardigan
+Price: 756.63
+Score: 3.6
+Entity: 59
+
+Last Modified: 2024-11-23 18:49:27

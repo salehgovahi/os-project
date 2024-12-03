@@ -1,0 +1,6 @@
+Name: Cuticle Cream
+Price: 983.25
+Score: 1.7
+Entity: 88
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: French Fries
+Price: 898.25
+Score: 3.2
+Entity: 5
+
+Last Modified: 2024-11-23 18:49:27

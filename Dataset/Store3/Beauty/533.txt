@@ -1,0 +1,6 @@
+Name: Peel-Off Mask
+Price: 24.45
+Score: 4.8
+Entity: 9
+
+Last Modified: 2024-11-23 18:50:00

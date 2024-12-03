@@ -1,0 +1,6 @@
+Name: Utility Cart
+Price: 896.39
+Score: 1.2
+Entity: 88
+
+Last Modified: 2024-11-23 18:50:00

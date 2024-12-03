@@ -1,0 +1,6 @@
+Name: Accent Chair
+Price: 755.85
+Score: 1.4
+Entity: 18
+
+Last Modified: 2024-11-23 18:49:27

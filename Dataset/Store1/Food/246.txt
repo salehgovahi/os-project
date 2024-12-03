@@ -1,0 +1,6 @@
+Name: Chili Dog
+Price: 556.67
+Score: 2.7
+Entity: 75
+
+Last Modified: 2024-11-23 18:50:11

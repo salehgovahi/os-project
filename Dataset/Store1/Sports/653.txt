@@ -1,0 +1,6 @@
+Name: Exercise Bike
+Price: 681.17
+Score: 4.1
+Entity: 44
+
+Last Modified: 2024-11-23 18:50:11

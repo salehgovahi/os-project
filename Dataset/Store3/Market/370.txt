@@ -1,0 +1,6 @@
+Name: Fish Fingers
+Price: 829.34
+Score: 3.6
+Entity: 98
+
+Last Modified: 2024-11-23 18:50:00

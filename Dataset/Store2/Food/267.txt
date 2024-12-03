@@ -1,0 +1,6 @@
+Name: Garlic Breadsticks
+Price: 840.67
+Score: 1.7
+Entity: 34
+
+Last Modified: 2024-11-23 18:49:27

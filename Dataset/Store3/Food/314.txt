@@ -1,0 +1,6 @@
+Name: Fried Rice
+Price: 718.47
+Score: 1.4
+Entity: 12
+
+Last Modified: 2024-11-23 18:50:00

@@ -1,0 +1,6 @@
+Name: Console Table
+Price: 102.66
+Score: 3.0
+Entity: 60
+
+Last Modified: 2024-11-23 18:49:27

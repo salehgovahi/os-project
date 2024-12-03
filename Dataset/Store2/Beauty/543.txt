@@ -1,0 +1,6 @@
+Name: Hair Spray
+Price: 222.41
+Score: 4.7
+Entity: 29
+
+Last Modified: 2024-11-23 18:49:27

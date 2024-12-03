@@ -1,0 +1,6 @@
+Name: Cropped Jeans
+Price: 698.46
+Score: 4.6
+Entity: 56
+
+Last Modified: 2024-11-23 18:49:27

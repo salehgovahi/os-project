@@ -1,0 +1,6 @@
+Name: Maxi Dress
+Price: 207.99
+Score: 4.0
+Entity: 26
+
+Last Modified: 2024-11-23 18:50:00

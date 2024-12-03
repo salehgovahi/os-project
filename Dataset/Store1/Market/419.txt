@@ -1,0 +1,6 @@
+Name: Canned Fruit
+Price: 380.33
+Score: 4.3
+Entity: 69
+
+Last Modified: 2024-11-23 18:50:11

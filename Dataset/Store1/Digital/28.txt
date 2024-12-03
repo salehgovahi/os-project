@@ -1,0 +1,6 @@
+Name: External Hard Drive
+Price: 275.12
+Score: 2.1
+Entity: 65
+
+Last Modified: 2024-11-23 18:50:11

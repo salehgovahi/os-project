@@ -14,6 +14,7 @@
 #define MAX_PATH_LENGTH 1024
 #define MAX_NAME_LENGTH 256
 #define MAX_ORDER_ITEMS 256
+#define MAX_THRESHOLD 1000000.0f
 
 typedef struct
 {
@@ -51,6 +52,18 @@ typedef struct
     int order_count;
     float price_threshold;
 } UserOrder;
+
+typedef struct
+{
+    Product *product;
+    const char *store_name;
+    const char *category_name;
+    FILE *log_file;
+    float price_threshold;
+    int quantity;
+    long int thread_id;
+    long int process_id;
+} ProductContext;
 
 int parse_product(FILE *file, Product *product)
 {
@@ -176,16 +189,6 @@ int load_dataset(Store *stores, const char *base_path)
     return store_count;
 }
 
-typedef struct
-{
-    Product *product;
-    const char *store_name;
-    const char *category_name;
-    FILE *log_file;
-    float price_threshold;
-    int quantity;
-} ProductContext;
-
 void *process_product(void *arg)
 {
     ProductContext *context = (ProductContext *)arg;
@@ -193,11 +196,33 @@ void *process_product(void *arg)
     const char *store_name = context->store_name;
     const char *category_name = context->category_name;
 
-    // Calculate total price based on the quantity
     float total_price = product->price * context->quantity;
 
     if (total_price <= context->price_threshold || context->price_threshold < 0)
-    { // Check price threshold
+    {
+        if (context->log_file)
+        {
+            fprintf(context->log_file, "Thread ID: %ld, PID: %ld, Store: %s, Category: %s, Product: %s, Quantity: %d, Total Price: %.2f\n",
+                    context->thread_id, context->process_id, store_name, category_name, product->name, context->quantity, total_price);
+        }
+    }
+
+    free(context);
+    return NULL;
+}
+
+
+void *find_product(void *arg)
+{
+    ProductContext *context = (ProductContext *)arg;
+    Product *product = context->product;
+    const char *store_name = context->store_name;
+    const char *category_name = context->category_name;
+
+    float total_price = product->price * context->quantity;
+
+    if (total_price <= context->price_threshold || context->price_threshold < 0)
+    {
         if (context->log_file)
         {
             fprintf(context->log_file, "Store: %s, Category: %s, Product: %s, Quantity: %d, Total Price: %.2f\n",
@@ -209,12 +234,30 @@ void *process_product(void *arg)
     return NULL;
 }
 
+void *process_orders(void *arg)
+{
+    printf("Processing orders in thread ID: %lu\n", pthread_self());
+    return NULL;
+}
+
+void *process_scores(void *arg)
+{
+    printf("Processing scores in thread ID: %lu\n", pthread_self());
+    return NULL;
+}
+
+void *process_final(void *arg)
+{
+    printf("Processing final in thread ID: %lu\n", pthread_self());
+    return NULL;
+}
+
 int main()
 {
     Store stores[MAX_STORES];
     const char *base_path = "Dataset";
     const char *output_directory = "Output";
-    const char *log_file_path = "product_log.txt";
+    const char *log_file_path = "a.txt";
 
     mkdir(output_directory, 0755);
     int store_count = load_dataset(stores, base_path);
@@ -222,7 +265,7 @@ int main()
     UserOrder user_order;
     printf("Username: ");
     fgets(user_order.username, sizeof(user_order.username), stdin);
-    user_order.username[strcspn(user_order.username, "\n")] = 0; // Remove newline
+    user_order.username[strcspn(user_order.username, "\n")] = 0;
 
     printf("Enter your order list (product_name quantity), type 'done' when finished:\n");
     user_order.order_count = 0;
@@ -240,10 +283,33 @@ int main()
         user_order.order_count++;
     }
 
-    printf("Price threshold: ");
-    scanf("%f", &user_order.price_threshold);
+    float price_threshold = MAX_THRESHOLD;
 
-    // Create a User Process to collect order information
+    printf("Price threshold (default is %.2f): ", MAX_THRESHOLD);
+    char input_buffer[256];
+    fgets(input_buffer, sizeof(input_buffer), stdin);
+
+    if (input_buffer[0] == '\n')
+    {
+        user_order.price_threshold = MAX_THRESHOLD;
+        printf("No input provided. Setting price threshold to default value: %.2f\n", MAX_THRESHOLD);
+    }
+    else
+    {
+
+        float price_threshold;
+        int threshold_status = sscanf(input_buffer, "%f", &price_threshold);
+
+        if (threshold_status != 1 || price_threshold <= 0)
+        {
+            user_order.price_threshold = MAX_THRESHOLD;
+        }
+        else
+        {
+            user_order.price_threshold = price_threshold;
+        }
+    }
+
     pid_t user_pid = fork();
     if (user_pid < 0)
     {
@@ -252,7 +318,8 @@ int main()
     }
 
     if (user_pid == 0)
-    { // User Process
+    {
+
         printf("User Process (PID: %d)\n", getpid());
         FILE *log_file = fopen(log_file_path, "w");
         if (!log_file)
@@ -261,7 +328,18 @@ int main()
             exit(EXIT_FAILURE);
         }
 
-        // Fork processes for each store
+        pthread_t order_thread_id;
+        pthread_t score_thread_id;
+        pthread_t final_thread_id;
+
+        pthread_create(&order_thread_id, NULL, process_orders, NULL);
+        pthread_create(&score_thread_id, NULL, process_scores, NULL);
+        pthread_create(&final_thread_id, NULL, process_final, NULL);
+
+        pthread_join(order_thread_id, NULL);
+        pthread_join(score_thread_id, NULL);
+        pthread_join(final_thread_id, NULL);
+
         for (int i = 0; i < store_count; i++)
         {
             pid_t store_pid = fork();
@@ -272,7 +350,7 @@ int main()
             }
 
             if (store_pid == 0)
-            { // Store Process
+            {
                 printf("Store Process (PID: %d) for Store: %s\n", getpid(), stores[i].store_name);
 
                 for (int j = 0; j < stores[i].category_count; j++)
@@ -285,14 +363,13 @@ int main()
                     }
 
                     if (category_pid == 0)
-                    { // Category Process
+                    {
                         printf("Category Process (PID: %d) for Store: %s, Category: %s\n", getpid(), stores[i].store_name, stores[i].categories[j].category_name);
 
                         for (int k = 0; k < stores[i].categories[j].product_count; k++)
                         {
                             pthread_t product_thread;
 
-                            // Check and match the product with the user's order
                             for (int order_index = 0; order_index < user_order.order_count; order_index++)
                             {
                                 if (strcmp(stores[i].categories[j].products[k].name, user_order.order_list[order_index].product_name) == 0)
@@ -304,10 +381,12 @@ int main()
                                     context->log_file = log_file;
                                     context->price_threshold = user_order.price_threshold;
                                     context->quantity = user_order.order_list[order_index].quantity;
+                                    context->process_id = getpid();
+                                    context->thread_id = product_thread;
 
                                     pthread_create(&product_thread, NULL, process_product, (void *)context);
                                     pthread_join(product_thread, NULL);
-                                    break; // Move on to the next product after processing the current one
+                                    break;
                                 }
                             }
                         }
@@ -327,7 +406,6 @@ int main()
         return 0;
     }
 
-    // Wait for the user process to terminate
     wait(NULL);
     return 0;
 }

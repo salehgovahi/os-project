@@ -15,12 +15,12 @@
 #define MAX_NAME_LENGTH 256
 #define MAX_ORDER_ITEMS 256
 #define MAX_THRESHOLD 1000000.0f
+#define MAX_BUFFER 1024
 
 typedef struct
 {
     char name[MAX_NAME_LENGTH];
     float price;
-    float score;
     int entity;
     char last_modified[50];
 } Product;
@@ -58,12 +58,23 @@ typedef struct
     Product *product;
     const char *store_name;
     const char *category_name;
-    FILE *log_file;
+    char *log_file_path;
     float price_threshold;
     int quantity;
     long int thread_id;
     long int process_id;
 } ProductContext;
+
+typedef struct
+{
+    Product products[MAX_PRODUCTS];
+    int products_count; // To keep track of how many products are added
+} ShoppingList;
+
+typedef struct
+{
+    ShoppingList shopping_lists[MAX_STORES]; // One shopping list per store
+} SuggestedShoppingLists;
 
 int parse_product(FILE *file, Product *product)
 {
@@ -73,8 +84,6 @@ int parse_product(FILE *file, Product *product)
         if (sscanf(line, "Name: %[^\n]", product->name) == 1)
             continue;
         if (sscanf(line, "Price: %f", &product->price) == 1)
-            continue;
-        if (sscanf(line, "Score: %f", &product->score) == 1)
             continue;
         if (sscanf(line, "Entity: %d", &product->entity) == 1)
             continue;
@@ -196,40 +205,27 @@ void *process_product(void *arg)
     const char *store_name = context->store_name;
     const char *category_name = context->category_name;
 
-    float total_price = product->price * context->quantity;
-
-    if (total_price <= context->price_threshold || context->price_threshold < 0)
+    FILE *log_file = fopen(context->log_file_path, "a");
+    if (!log_file)
     {
-        if (context->log_file)
-        {
-            fprintf(context->log_file, "Thread ID: %ld, PID: %ld, Store: %s, Category: %s, Product: %s, Quantity: %d, Total Price: %.2f\n",
-                    context->thread_id, context->process_id, store_name, category_name, product->name, context->quantity, total_price);
-        }
+        perror("Failed to open log file in thread");
+        free(context->log_file_path);
+        free(context);
+        return NULL;
     }
-
-    free(context);
-    return NULL;
-}
-
-
-void *find_product(void *arg)
-{
-    ProductContext *context = (ProductContext *)arg;
-    Product *product = context->product;
-    const char *store_name = context->store_name;
-    const char *category_name = context->category_name;
 
     float total_price = product->price * context->quantity;
 
     if (total_price <= context->price_threshold || context->price_threshold < 0)
     {
-        if (context->log_file)
-        {
-            fprintf(context->log_file, "Store: %s, Category: %s, Product: %s, Quantity: %d, Total Price: %.2f\n",
-                    store_name, category_name, product->name, context->quantity, total_price);
-        }
-    }
 
+        fprintf(log_file, "Thread ID: %ld, PID: %ld, Store: %s, Category: %s, Product: %s, Quantity: %d, Total Price: %.2f\n",
+                context->thread_id, context->process_id, store_name, category_name, product->name, context->quantity, total_price);
+        printf("Thread ID: %ld, PID: %ld, Store: %s, Category: %s, Product: %s, Quantity: %d, Total Price: %.2f\n",
+               context->thread_id, context->process_id, store_name, category_name, product->name, context->quantity, total_price);
+    }
+    fclose(log_file);
+    free(context->log_file_path);
     free(context);
     return NULL;
 }
@@ -257,7 +253,6 @@ int main()
     Store stores[MAX_STORES];
     const char *base_path = "Dataset";
     const char *output_directory = "Output";
-    const char *log_file_path = "a.txt";
 
     mkdir(output_directory, 0755);
     int store_count = load_dataset(stores, base_path);
@@ -283,8 +278,6 @@ int main()
         user_order.order_count++;
     }
 
-    float price_threshold = MAX_THRESHOLD;
-
     printf("Price threshold (default is %.2f): ", MAX_THRESHOLD);
     char input_buffer[256];
     fgets(input_buffer, sizeof(input_buffer), stdin);
@@ -296,18 +289,19 @@ int main()
     }
     else
     {
-
-        float price_threshold;
-        int threshold_status = sscanf(input_buffer, "%f", &price_threshold);
-
-        if (threshold_status != 1 || price_threshold <= 0)
+        int threshold_status = sscanf(input_buffer, "%f", &user_order.price_threshold);
+        if (threshold_status != 1 || user_order.price_threshold <= 0)
         {
             user_order.price_threshold = MAX_THRESHOLD;
         }
-        else
-        {
-            user_order.price_threshold = price_threshold;
-        }
+    }
+
+    // Create a pipe for IPC
+    int pipefd[2]; // pipefd[0] is read end, pipefd[1] is write end
+    if (pipe(pipefd) == -1)
+    {
+        perror("pipe");
+        exit(EXIT_FAILURE);
     }
 
     pid_t user_pid = fork();
@@ -318,94 +312,69 @@ int main()
     }
 
     if (user_pid == 0)
-    {
+    {                     // Child process (User Process)
+        close(pipefd[0]); // Close read end in the child
 
         printf("User Process (PID: %d)\n", getpid());
-        FILE *log_file = fopen(log_file_path, "w");
-        if (!log_file)
+
+        for (int m = 0; m < user_order.order_count; m++)
         {
-            perror("Failed to open log file");
-            exit(EXIT_FAILURE);
-        }
-
-        pthread_t order_thread_id;
-        pthread_t score_thread_id;
-        pthread_t final_thread_id;
-
-        pthread_create(&order_thread_id, NULL, process_orders, NULL);
-        pthread_create(&score_thread_id, NULL, process_scores, NULL);
-        pthread_create(&final_thread_id, NULL, process_final, NULL);
-
-        pthread_join(order_thread_id, NULL);
-        pthread_join(score_thread_id, NULL);
-        pthread_join(final_thread_id, NULL);
-
-        for (int i = 0; i < store_count; i++)
-        {
-            pid_t store_pid = fork();
-            if (store_pid < 0)
+            for (int i = 0; i < store_count; i++)
             {
-                perror("Error forking store process");
-                exit(EXIT_FAILURE);
-            }
+                pid_t store_pid = fork();
+                if (store_pid == 0)
+                { // Store Process
 
-            if (store_pid == 0)
-            {
-                printf("Store Process (PID: %d) for Store: %s\n", getpid(), stores[i].store_name);
+                    printf("Store Process (PID: %d) for Store: %s\n", getpid(), stores[i].store_name);
 
-                for (int j = 0; j < stores[i].category_count; j++)
-                {
-                    pid_t category_pid = fork();
-                    if (category_pid < 0)
+                    for (int j = 0; j < stores[i].category_count; j++)
                     {
-                        perror("Error forking category process");
-                        exit(EXIT_FAILURE);
-                    }
-
-                    if (category_pid == 0)
-                    {
-                        printf("Category Process (PID: %d) for Store: %s, Category: %s\n", getpid(), stores[i].store_name, stores[i].categories[j].category_name);
-
-                        for (int k = 0; k < stores[i].categories[j].product_count; k++)
-                        {
-                            pthread_t product_thread;
-
-                            for (int order_index = 0; order_index < user_order.order_count; order_index++)
+                        pid_t category_pid = fork();
+                        if (category_pid == 0)
+                        { // Category Process
+                            printf("Category Process (PID: %d) for Store: %s, Category: %s\n", getpid(), stores[i].store_name, stores[i].categories[j].category_name);
+                            for (int k = 0; k < stores[i].categories[j].product_count; k++)
                             {
-                                if (strcmp(stores[i].categories[j].products[k].name, user_order.order_list[order_index].product_name) == 0)
-                                {
-                                    ProductContext *context = malloc(sizeof(ProductContext));
-                                    context->product = &stores[i].categories[j].products[k];
-                                    context->store_name = stores[i].store_name;
-                                    context->category_name = stores[i].categories[j].category_name;
-                                    context->log_file = log_file;
-                                    context->price_threshold = user_order.price_threshold;
-                                    context->quantity = user_order.order_list[order_index].quantity;
-                                    context->process_id = getpid();
-                                    context->thread_id = product_thread;
-
-                                    pthread_create(&product_thread, NULL, process_product, (void *)context);
-                                    pthread_join(product_thread, NULL);
-                                    break;
+                                int value = strcmp(stores[i].categories[j].products[k].name,
+                                                   user_order.order_list[m].product_name);
+                                if (value == 0)
+                                { // Product found
+                                    // Format the output to send it through the pipe
+                                    char buffer[MAX_BUFFER];
+                                    snprintf(buffer, sizeof(buffer), "Store: %s, Category: %s, Product: %s, Quantity: %d, Price: %.2f\n",
+                                             stores[i].store_name, stores[i].categories[j].category_name,
+                                             stores[i].categories[j].products[k].name,
+                                             user_order.order_list[m].quantity,
+                                             stores[i].categories[j].products[k].price);
+                                    write(pipefd[1], buffer, strlen(buffer));
                                 }
                             }
+                            exit(0);
                         }
-                        exit(0);
+                        wait(NULL); // Wait for category process to complete
                     }
+                    exit(0);
                 }
-
-                while (wait(NULL) > 0)
-                    ;
-                exit(0);
+                wait(NULL); // Wait for store process to complete
             }
         }
-
-        while (wait(NULL) > 0)
-            ;
-        fclose(log_file);
-        return 0;
+        close(pipefd[1]); // Close write end in child
+        return 0;         // Exit child process
     }
 
-    wait(NULL);
+    // Parent process
+    close(pipefd[1]); // Close write end in parent
+
+    // Read the products from the pipe
+    char read_buffer[MAX_BUFFER];
+    printf("Suggestions:\n");
+    while (read(pipefd[0], read_buffer, sizeof(read_buffer)) > 0)
+    {
+        printf("%s", read_buffer); // Output the suggestion line received via pipe
+    }
+
+    close(pipefd[0]); // Close read end in parent
+    wait(NULL);       // Wait for child process to finish
+
     return 0;
 }

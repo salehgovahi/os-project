@@ -102,20 +102,21 @@ typedef struct
 
 typedef struct
 {
+    pthread_mutex_t mutex;
+    Store stores[MAX_STORES];
+    UserSubscription user_subscriptions[MAX_USERS];
+    int subscription_count;
+} GlobalSharedMemory;
+GlobalSharedMemory *global_shared_memory;
+
+typedef struct
+{
     SuggestedShoppingLists lists;
     pthread_mutex_t mutex;
     UserOrder user_order;
     char wanted_list_store_name[MAX_NAME_LENGTH];
-
-    Store stores[MAX_STORES];
-    UserSubscription user_subscriptions[MAX_USERS];
-    int subscription_count;
-} SharedMemory;
-
-SharedMemory *shared_memory;
-
-SuggestedShoppingLists suggested_shopping_lists = {0};
-pthread_mutex_t shopping_list_mutex = PTHREAD_MUTEX_INITIALIZER;
+} PrivateSharedMemory;
+PrivateSharedMemory *private_shared_memory;
 
 int parse_product(FILE *file, Product *product)
 {
@@ -280,19 +281,19 @@ void *process_product(void *arg)
                 break;
             }
 
-            pthread_mutex_lock(&shared_memory->mutex);
+            pthread_mutex_lock(&private_shared_memory->mutex);
 
-            int product_count = shared_memory->lists.shopping_lists[context->store_index].products_count;
+            int product_count = private_shared_memory->lists.shopping_lists[context->store_index].products_count;
             int product_exists = 0;
 
             if (product_count == 0)
             {
-                strcpy(shared_memory->lists.shopping_lists[context->store_index].store_name, store_name);
+                strcpy(private_shared_memory->lists.shopping_lists[context->store_index].store_name, store_name);
             }
 
             for (int j = 0; j < product_count; j++)
             {
-                if (strcasecmp(shared_memory->lists.shopping_lists[context->store_index].products[j].name, product->name) == 0)
+                if (strcasecmp(private_shared_memory->lists.shopping_lists[context->store_index].products[j].name, product->name) == 0)
                 {
                     product_exists = 1;
                     break;
@@ -308,11 +309,11 @@ void *process_product(void *arg)
                 suggested_product.score = product->score;
                 suggested_product.price = product->price;
 
-                shared_memory->lists.shopping_lists[context->store_index].products[product_count] = suggested_product;
-                shared_memory->lists.shopping_lists[context->store_index].products_count++;
+                private_shared_memory->lists.shopping_lists[context->store_index].products[product_count] = suggested_product;
+                private_shared_memory->lists.shopping_lists[context->store_index].products_count++;
             }
 
-            pthread_mutex_unlock(&shared_memory->mutex);
+            pthread_mutex_unlock(&private_shared_memory->mutex);
             break;
         }
     }
@@ -335,7 +336,7 @@ void wake_order_thread()
     pthread_mutex_unlock(&order_mutex);
 }
 
-void *process_orders(void *arg)
+void *process_orders(void *args)
 {
     pthread_mutex_lock(&order_mutex);
     while (!order_thread_should_run)
@@ -346,16 +347,16 @@ void *process_orders(void *arg)
 
     for (int store_index = 0; store_index < MAX_STORES; store_index++)
     {
-        int product_count = shared_memory->lists.shopping_lists[store_index].products_count;
+        int product_count = private_shared_memory->lists.shopping_lists[store_index].products_count;
         float total_list_value = 0.0f;
 
         if (product_count > 0)
         {
-            printf("Calculating values for Store: %s\n", shared_memory->lists.shopping_lists[store_index].store_name);
+            printf("Calculating values for Store: %s\n", private_shared_memory->lists.shopping_lists[store_index].store_name);
 
             for (int product_index = 0; product_index < product_count; product_index++)
             {
-                SuggestedProduct product = shared_memory->lists.shopping_lists[store_index].products[product_index];
+                SuggestedProduct product = private_shared_memory->lists.shopping_lists[store_index].products[product_index];
                 float product_value = product.price * product.score;
                 total_list_value += product_value;
 
@@ -363,7 +364,7 @@ void *process_orders(void *arg)
                        product.name, product.price, product.score, product_value);
             }
 
-            printf("Total value for Store %s: %.2f\n\n", shared_memory->lists.shopping_lists[store_index].store_name, total_list_value);
+            printf("Total value for Store %s: %.2f\n\n", private_shared_memory->lists.shopping_lists[store_index].store_name, total_list_value);
         }
     }
 
@@ -391,29 +392,30 @@ void *process_scores(void *arg)
     }
     pthread_mutex_unlock(&score_mutex);
 
-    pthread_mutex_lock(&shared_memory->mutex);
-    const char *wanted_store_name = shared_memory->wanted_list_store_name;
+    pthread_mutex_lock(&private_shared_memory->mutex);
+    pthread_mutex_lock(&global_shared_memory->mutex);
+    const char *wanted_store_name = private_shared_memory->wanted_list_store_name;
 
     for (int store_index = 0; store_index < MAX_STORES; store_index++)
     {
-        if (strcasecmp(shared_memory->lists.shopping_lists[store_index].store_name, wanted_store_name) == 0)
+        if (strcasecmp(private_shared_memory->lists.shopping_lists[store_index].store_name, wanted_store_name) == 0)
         {
-            int product_count = shared_memory->lists.shopping_lists[store_index].products_count;
+            int product_count = private_shared_memory->lists.shopping_lists[store_index].products_count;
 
-            printf("Rating for products in Store: %s\n", shared_memory->lists.shopping_lists[store_index].store_name);
+            printf("Rating for products in Store: %s\n", private_shared_memory->lists.shopping_lists[store_index].store_name);
             for (int product_index = 0; product_index < product_count; product_index++)
             {
-                SuggestedProduct *suggested_product = &shared_memory->lists.shopping_lists[store_index].products[product_index];
+                SuggestedProduct *suggested_product = &private_shared_memory->lists.shopping_lists[store_index].products[product_index];
 
                 float rating;
                 printf("Rate the product '%s' (Price: %.2f, Current score: %.2f): ", suggested_product->name, suggested_product->price, suggested_product->score);
                 scanf("%f", &rating);
 
-                for (int cat_index = 0; cat_index < shared_memory->stores[store_index].category_count; cat_index++)
+                for (int cat_index = 0; cat_index < global_shared_memory->stores[store_index].category_count; cat_index++)
                 {
-                    for (int prod_index = 0; prod_index < shared_memory->stores[store_index].categories[cat_index].product_count; prod_index++)
+                    for (int prod_index = 0; prod_index < global_shared_memory->stores[store_index].categories[cat_index].product_count; prod_index++)
                     {
-                        Product *store_product = &shared_memory->stores[store_index].categories[cat_index].products[prod_index];
+                        Product *store_product = &global_shared_memory->stores[store_index].categories[cat_index].products[prod_index];
                         if (strcasecmp(store_product->name, suggested_product->name) == 0)
                         {
                             store_product->score = ((store_product->score * store_product->rating_count) + rating) / (store_product->rating_count + 1);
@@ -431,7 +433,8 @@ void *process_scores(void *arg)
             }
         }
     }
-    pthread_mutex_unlock(&shared_memory->mutex);
+    pthread_mutex_unlock(&global_shared_memory->mutex);
+    pthread_mutex_lock(&private_shared_memory->mutex);
 
     return NULL;
 }
@@ -457,33 +460,34 @@ void *process_final(void *arg)
     }
     pthread_mutex_unlock(&final_mutex);
 
-    pthread_mutex_lock(&shared_memory->mutex);
-    const char *wanted_store_name = shared_memory->wanted_list_store_name;
-    int price_threshold = shared_memory->user_order.price_threshold;
+    pthread_mutex_lock(&global_shared_memory->mutex);
+    pthread_mutex_lock(&private_shared_memory->mutex);
+    const char *wanted_store_name = private_shared_memory->wanted_list_store_name;
+    int price_threshold = private_shared_memory->user_order.price_threshold;
 
     for (int store_index = 0; store_index < MAX_STORES; store_index++)
     {
-        if (strcasecmp(shared_memory->lists.shopping_lists[store_index].store_name, wanted_store_name) == 0)
+        if (strcasecmp(private_shared_memory->lists.shopping_lists[store_index].store_name, wanted_store_name) == 0)
         {
-            int product_count = shared_memory->lists.shopping_lists[store_index].products_count;
+            int product_count = private_shared_memory->lists.shopping_lists[store_index].products_count;
             float total_list_value = 0.0f;
 
             if (product_count > 0)
             {
-                printf("Calculating values for Store: %s\n", shared_memory->lists.shopping_lists[store_index].store_name);
+                printf("Calculating values for Store: %s\n", private_shared_memory->lists.shopping_lists[store_index].store_name);
 
                 for (int product_index = 0; product_index < product_count; product_index++)
                 {
-                    SuggestedProduct product = shared_memory->lists.shopping_lists[store_index].products[product_index];
+                    SuggestedProduct product = private_shared_memory->lists.shopping_lists[store_index].products[product_index];
                     float product_value = product.price * product.wanted_number;
 
                     int discount_applied = 0;
-                    for (int user_index = 0; user_index < shared_memory->subscription_count; user_index++)
+                    for (int user_index = 0; user_index < global_shared_memory->subscription_count; user_index++)
                     {
-                        if (strcasecmp(shared_memory->user_order.username, shared_memory->user_subscriptions[user_index].username) == 0 &&
-                            strcasecmp(shared_memory->user_subscriptions[user_index].store_name, wanted_store_name) == 0)
+                        if (strcasecmp(private_shared_memory->user_order.username, global_shared_memory->user_subscriptions[user_index].username) == 0 &&
+                            strcasecmp(global_shared_memory->user_subscriptions[user_index].store_name, wanted_store_name) == 0)
                         {
-                            if (shared_memory->user_subscriptions[user_index].has_subscription)
+                            if (global_shared_memory->user_subscriptions[user_index].has_subscription)
                             {
                                 product_value *= 0.90;
                                 discount_applied = 1;
@@ -495,11 +499,11 @@ void *process_final(void *arg)
 
                     total_list_value += product_value;
 
-                    for (int category_index = 0; category_index < shared_memory->stores[store_index].category_count; category_index++)
+                    for (int category_index = 0; category_index < global_shared_memory->stores[store_index].category_count; category_index++)
                     {
-                        for (int prod_index = 0; prod_index < shared_memory->stores[store_index].categories[category_index].product_count; prod_index++)
+                        for (int prod_index = 0; prod_index < global_shared_memory->stores[store_index].categories[category_index].product_count; prod_index++)
                         {
-                            Product *store_product = &shared_memory->stores[store_index].categories[category_index].products[prod_index];
+                            Product *store_product = &global_shared_memory->stores[store_index].categories[category_index].products[prod_index];
                             if (strcasecmp(store_product->name, product.name) == 0)
                             {
                                 int new_entity = store_product->entity - product.wanted_number;
@@ -522,14 +526,14 @@ void *process_final(void *arg)
                     }
                 }
 
-                printf("Total value for Store %s after possible discount: %.2f\n\n", shared_memory->lists.shopping_lists[store_index].store_name, total_list_value);
+                printf("Total value for Store %s after possible discount: %.2f\n\n", private_shared_memory->lists.shopping_lists[store_index].store_name, total_list_value);
             }
 
             int user_subscription_index = -1;
-            for (int user_index = 0; user_index < shared_memory->subscription_count; user_index++)
+            for (int user_index = 0; user_index < global_shared_memory->subscription_count; user_index++)
             {
-                if (strcasecmp(shared_memory->user_order.username, shared_memory->user_subscriptions[user_index].username) == 0 &&
-                    strcasecmp(shared_memory->user_subscriptions[user_index].store_name, wanted_store_name) == 0)
+                if (strcasecmp(private_shared_memory->user_order.username, global_shared_memory->user_subscriptions[user_index].username) == 0 &&
+                    strcasecmp(global_shared_memory->user_subscriptions[user_index].store_name, wanted_store_name) == 0)
                 {
                     user_subscription_index = user_index;
                     break;
@@ -538,17 +542,18 @@ void *process_final(void *arg)
 
             if (user_subscription_index == -1)
             {
-                if (shared_memory->subscription_count < MAX_USERS)
+                if (global_shared_memory->subscription_count < MAX_USERS)
                 {
-                    strncpy(shared_memory->user_subscriptions[shared_memory->subscription_count].username, shared_memory->user_order.username, sizeof(shared_memory->user_subscriptions[shared_memory->subscription_count].username));
-                    strncpy(shared_memory->user_subscriptions[shared_memory->subscription_count].store_name, wanted_store_name, sizeof(shared_memory->user_subscriptions[shared_memory->subscription_count].store_name));
-                    shared_memory->user_subscriptions[shared_memory->subscription_count].has_subscription = 1;
-                    shared_memory->subscription_count++;
+                    strncpy(global_shared_memory->user_subscriptions[global_shared_memory->subscription_count].username, private_shared_memory->user_order.username, sizeof(global_shared_memory->user_subscriptions[global_shared_memory->subscription_count].username));
+                    strncpy(global_shared_memory->user_subscriptions[global_shared_memory->subscription_count].store_name, wanted_store_name, sizeof(global_shared_memory->user_subscriptions[global_shared_memory->subscription_count].store_name));
+                    global_shared_memory->user_subscriptions[global_shared_memory->subscription_count].has_subscription = 1;
+                    global_shared_memory->subscription_count++;
                 }
             }
         }
     }
-    pthread_mutex_unlock(&shared_memory->mutex);
+    pthread_mutex_unlock(&global_shared_memory->mutex);
+    pthread_mutex_unlock(&private_shared_memory->mutex);
 
     return NULL;
 }
@@ -563,21 +568,21 @@ int main()
 
     int store_count = load_dataset(stores, base_path);
 
-    int shm_fd = shm_open("/my_shared_memory", O_CREAT | O_RDWR, 0666);
+    int shm_fd = shm_open("/global_shared_memory", O_CREAT | O_RDWR, 0666);
     if (shm_fd == -1)
     {
         perror("shm_open");
         exit(1);
     }
 
-    if (ftruncate(shm_fd, sizeof(SharedMemory)) == -1)
+    if (ftruncate(shm_fd, sizeof(GlobalSharedMemory)) == -1)
     {
         perror("ftruncate");
         exit(1);
     }
 
-    shared_memory = mmap(NULL, sizeof(SharedMemory), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
-    if (shared_memory == MAP_FAILED)
+    global_shared_memory = mmap(NULL, sizeof(GlobalSharedMemory), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+    if (global_shared_memory == MAP_FAILED)
     {
         perror("mmap");
         exit(1);
@@ -586,95 +591,9 @@ int main()
     pthread_mutexattr_t mutex_attr;
     pthread_mutexattr_init(&mutex_attr);
     pthread_mutexattr_setpshared(&mutex_attr, PTHREAD_PROCESS_SHARED);
-    pthread_mutex_init(&shared_memory->mutex, &mutex_attr);
+    pthread_mutex_init(&global_shared_memory->mutex, &mutex_attr);
 
-    memcpy(shared_memory->stores, stores, sizeof(Store) * store_count);
-
-    shared_memory->lists.shopping_lists[0].products_count = store_count;
-
-    memset(&shared_memory->lists, 0, sizeof(SuggestedShoppingLists));
-    UserOrder user_order;
-    printf("Username: ");
-    fgets(user_order.username, sizeof(user_order.username), stdin);
-    user_order.username[strcspn(user_order.username, "\n")] = 0;
-
-    printf("Enter your order list (product_name quantity), type 'done' when finished:\n");
-    user_order.order_count = 0;
-
-    while (user_order.order_count < MAX_ORDER_ITEMS)
-    {
-        char line[256];
-        if (fgets(line, sizeof(line), stdin) == NULL)
-        {
-            break;
-        }
-        line[strcspn(line, "\n")] = 0;
-
-        if (strcmp(line, "done") == 0)
-        {
-            break;
-        }
-
-        char *last_space = strrchr(line, ' ');
-        if (last_space == NULL)
-        {
-            printf("Invalid input format. Please use 'product name quantity'.\n");
-            continue;
-        }
-
-        int quantity;
-        if (sscanf(last_space + 1, "%d", &quantity) != 1)
-        {
-            printf("Invalid quantity. Please enter a valid number.\n");
-            continue;
-        }
-
-        int name_length = last_space - line;
-        if (name_length >= MAX_NAME_LENGTH)
-        {
-            printf("Product name is too long. Maximum length is %d characters.\n", MAX_NAME_LENGTH - 1);
-            continue;
-        }
-        strncpy(user_order.order_list[user_order.order_count].product_name, line, name_length);
-        user_order.order_list[user_order.order_count].product_name[name_length] = '\0';
-
-        char *start = user_order.order_list[user_order.order_count].product_name;
-        char *end = start + strlen(start) - 1;
-        while (*start && isspace(*start))
-            start++;
-        while (end > start && isspace(*end))
-            *end-- = '\0';
-        memmove(user_order.order_list[user_order.order_count].product_name, start, strlen(start) + 1);
-
-        user_order.order_list[user_order.order_count].quantity = quantity;
-        user_order.order_count++;
-
-        printf("Added: '%s' (Quantity: %d)\n",
-               user_order.order_list[user_order.order_count - 1].product_name,
-               user_order.order_list[user_order.order_count - 1].quantity);
-    }
-
-    printf("Price threshold (default is %.2f): ", MAX_THRESHOLD);
-    char input_buffer[256];
-    fgets(input_buffer, sizeof(input_buffer), stdin);
-
-    if (input_buffer[0] == '\n')
-    {
-        user_order.price_threshold = MAX_THRESHOLD;
-        printf("No input provided. Setting price threshold to default value: %.2f\n", MAX_THRESHOLD);
-    }
-    else
-    {
-        int threshold_status = sscanf(input_buffer, "%f", &user_order.price_threshold);
-
-        if (threshold_status != 1 || user_order.price_threshold <= 0)
-        {
-            user_order.price_threshold = MAX_THRESHOLD;
-        }
-    }
-
-    memset(&shared_memory->user_order, 0, sizeof(UserOrder));
-    shared_memory->user_order = user_order;
+    memcpy(global_shared_memory->stores, stores, sizeof(Store) * store_count);
 
     pid_t user_pid = fork();
     if (user_pid < 0)
@@ -685,6 +604,118 @@ int main()
 
     if (user_pid == 0)
     {
+        int shm_fd = shm_open("/private_shared_memory", O_CREAT | O_RDWR, 0666);
+        if (shm_fd == -1)
+        {
+            perror("shm_open");
+            exit(1);
+        }
+
+        if (ftruncate(shm_fd, sizeof(PrivateSharedMemory)) == -1)
+        {
+            perror("ftruncate");
+            exit(1);
+        }
+
+        private_shared_memory = mmap(NULL, sizeof(PrivateSharedMemory), PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);
+        if (private_shared_memory == MAP_FAILED)
+        {
+            perror("mmap");
+            exit(1);
+        }
+
+        pthread_mutexattr_t mutex_attr;
+        pthread_mutexattr_init(&mutex_attr);
+        pthread_mutexattr_setpshared(&mutex_attr, PTHREAD_PROCESS_SHARED);
+        pthread_mutex_init(&private_shared_memory->mutex, &mutex_attr);
+
+        UserOrder user_order;
+        printf("Username: ");
+        fgets(user_order.username, sizeof(user_order.username), stdin);
+        user_order.username[strcspn(user_order.username, "\n")] = 0;
+
+        printf("Enter your order list (product_name quantity), type 'done' when finished:\n");
+        user_order.order_count = 0;
+
+        while (user_order.order_count < MAX_ORDER_ITEMS)
+        {
+            char line[256];
+            if (fgets(line, sizeof(line), stdin) == NULL)
+            {
+                break;
+            }
+            line[strcspn(line, "\n")] = 0;
+
+            if (strcmp(line, "done") == 0)
+            {
+                break;
+            }
+
+            char *last_space = strrchr(line, ' ');
+            if (last_space == NULL)
+            {
+                printf("Invalid input format. Please use 'product name quantity'.\n");
+                continue;
+            }
+
+            int quantity;
+            if (sscanf(last_space + 1, "%d", &quantity) != 1)
+            {
+                printf("Invalid quantity. Please enter a valid number.\n");
+                continue;
+            }
+
+            int name_length = last_space - line;
+            if (name_length >= MAX_NAME_LENGTH)
+            {
+                printf("Product name is too long. Maximum length is %d characters.\n", MAX_NAME_LENGTH - 1);
+                continue;
+            }
+            strncpy(user_order.order_list[user_order.order_count].product_name, line, name_length);
+            user_order.order_list[user_order.order_count].product_name[name_length] = '\0';
+
+            char *start = user_order.order_list[user_order.order_count].product_name;
+            char *end = start + strlen(start) - 1;
+            while (*start && isspace(*start))
+                start++;
+            while (end > start && isspace(*end))
+                *end-- = '\0';
+            memmove(user_order.order_list[user_order.order_count].product_name, start, strlen(start) + 1);
+
+            user_order.order_list[user_order.order_count].quantity = quantity;
+            user_order.order_count++;
+
+            printf("Added: '%s' (Quantity: %d)\n",
+                   user_order.order_list[user_order.order_count - 1].product_name,
+                   user_order.order_list[user_order.order_count - 1].quantity);
+        }
+
+        printf("Price threshold (default is %.2f): ", MAX_THRESHOLD);
+        char input_buffer[256];
+        fgets(input_buffer, sizeof(input_buffer), stdin);
+
+        if (input_buffer[0] == '\n')
+        {
+            user_order.price_threshold = MAX_THRESHOLD;
+            printf("No input provided. Setting price threshold to default value: %.2f\n", MAX_THRESHOLD);
+        }
+        else
+        {
+            int threshold_status = sscanf(input_buffer, "%f", &user_order.price_threshold);
+
+            if (threshold_status != 1 || user_order.price_threshold <= 0)
+            {
+                user_order.price_threshold = MAX_THRESHOLD;
+            }
+        }
+
+        memset(&private_shared_memory->user_order, 0, sizeof(UserOrder));
+        private_shared_memory->user_order = user_order;
+        memset(&private_shared_memory->lists, 0, sizeof(SuggestedShoppingLists));
+        private_shared_memory->lists.shopping_lists[0].products_count = store_count;
+
+        sleep(2);
+
         printf("User Process (PID: %d)\n", getpid());
 
         pthread_t order_thread_id;
@@ -696,9 +727,9 @@ int main()
         pthread_create(&score_thread_id, NULL, process_scores, NULL);
         pthread_create(&final_thread_id, NULL, process_final, NULL);
 
-        for (int m = 0; m < user_order.order_count; m++)
+        for (int m = 0; m < private_shared_memory->user_order.order_count; m++)
         {
-            for (int i = 0; i < store_count; i++)
+            for (int i = 0; i < MAX_STORES; i++)
             {
                 pid_t store_pid = fork();
                 if (store_pid < 0)
@@ -709,9 +740,9 @@ int main()
 
                 if (store_pid == 0)
                 {
-                    printf("Store Process (PID: %d) for Store: %s\n", getpid(), shared_memory->stores[i].store_name);
+                    printf("Store Process (PID: %d) for Store: %s\n", getpid(), global_shared_memory->stores[i].store_name);
 
-                    for (int j = 0; j < shared_memory->stores[i].category_count; j++)
+                    for (int j = 0; j < global_shared_memory->stores[i].category_count; j++)
                     {
                         pid_t category_pid = fork();
                         if (category_pid < 0)
@@ -722,7 +753,7 @@ int main()
 
                         if (category_pid == 0)
                         {
-                            printf("Category Process (PID: %d) for Store: %s, Category: %s\n", getpid(), shared_memory->stores[i].store_name, shared_memory->stores[i].categories[j].category_name);
+                            printf("Category Process (PID: %d) for Store: %s, Category: %s\n", getpid(), global_shared_memory->stores[i].store_name, global_shared_memory->stores[i].categories[j].category_name);
 
                             char log_file_path[MAX_PATH_LENGTH];
                             snprintf(log_file_path, sizeof(log_file_path), "%s/log_%s", output_directory, user_order.username);
@@ -730,18 +761,18 @@ int main()
                             pthread_t threads[MAX_PRODUCTS];
                             int thread_count = 0;
 
-                            for (int k = 0; k < shared_memory->stores[i].categories[j].product_count; k++)
+                            for (int k = 0; k < global_shared_memory->stores[i].categories[j].product_count; k++)
                             {
                                 ProductContext *context = malloc(sizeof(ProductContext));
-                                context->product = &shared_memory->stores[i].categories[j].products[k];
-                                context->store_name = shared_memory->stores[i].store_name;
-                                context->category_name = shared_memory->stores[i].categories[j].category_name;
+                                context->product = &global_shared_memory->stores[i].categories[j].products[k];
+                                context->store_name = global_shared_memory->stores[i].store_name;
+                                context->category_name = global_shared_memory->stores[i].categories[j].category_name;
                                 context->log_file_path = strdup(log_file_path);
                                 context->price_threshold = user_order.price_threshold;
                                 context->quantity = 1;
                                 context->process_id = getpid();
                                 context->store_index = i;
-                                context->user_order = &user_order;
+                                context->user_order = &private_shared_memory->user_order;
 
                                 pthread_create(&threads[thread_count], NULL, process_product, context);
                                 thread_count++;
@@ -766,19 +797,21 @@ int main()
                 ;
         }
 
+        sleep(3);
+
         printf("\nSuggested Shopping Lists:\n");
         for (int j = 0; j < store_count; j++)
         {
-            if (shared_memory->lists.shopping_lists[j].products_count > 0)
+            if (private_shared_memory->lists.shopping_lists[j].products_count > 0)
             {
-                printf("Suggestions for Store: %s\n", shared_memory->lists.shopping_lists[j].store_name);
-                for (int k = 0; k < shared_memory->lists.shopping_lists[j].products_count; k++)
+                printf("Suggestions for Store: %s\n", private_shared_memory->lists.shopping_lists[j].store_name);
+                for (int k = 0; k < private_shared_memory->lists.shopping_lists[j].products_count; k++)
                 {
                     printf("Product: %s, Entity: %d, Price: %.2f, Score: %.2f\n",
-                           shared_memory->lists.shopping_lists[j].products[k].name,
-                           shared_memory->lists.shopping_lists[j].products[k].entity,
-                           shared_memory->lists.shopping_lists[j].products[k].price,
-                           shared_memory->lists.shopping_lists[j].products[k].score);
+                           private_shared_memory->lists.shopping_lists[j].products[k].name,
+                           private_shared_memory->lists.shopping_lists[j].products[k].entity,
+                           private_shared_memory->lists.shopping_lists[j].products[k].price,
+                           private_shared_memory->lists.shopping_lists[j].products[k].score);
                 }
                 printf("\n");
             }
@@ -794,18 +827,16 @@ int main()
         printf("Enter the name of the store to finalize your purchase: ");
         scanf(" %[^\n]", wanted_list_store_name);
 
-        printf("Hello");
+        pthread_mutex_lock(&private_shared_memory->mutex);
+        strncpy(private_shared_memory->wanted_list_store_name, wanted_list_store_name, sizeof(private_shared_memory->wanted_list_store_name));
+        pthread_mutex_unlock(&private_shared_memory->mutex);
 
-        pthread_mutex_lock(&shared_memory->mutex);
-        strncpy(shared_memory->wanted_list_store_name, wanted_list_store_name, sizeof(shared_memory->wanted_list_store_name));
-        pthread_mutex_unlock(&shared_memory->mutex);
-
-        if (sscanf(wanted_list_store_name, " %[^\n]", shared_memory->wanted_list_store_name) != 1)
+        if (sscanf(wanted_list_store_name, " %[^\n]", private_shared_memory->wanted_list_store_name) != 1)
         {
             fprintf(stderr, "Error capturing store name.\n");
         }
 
-        pthread_mutex_unlock(&shared_memory->mutex);
+        pthread_mutex_unlock(&private_shared_memory->mutex);
 
         sleep(5);
 
@@ -823,19 +854,24 @@ int main()
             perror("Failed to join score_thread_id");
         }
 
+        sleep(1);
+
         while (wait(NULL) > 0)
             ;
 
-        exit(0);
+        pthread_mutex_destroy(&private_shared_memory->mutex);
+        munmap(private_shared_memory, sizeof(PrivateSharedMemory));
+        shm_unlink("/private_shared_memory");
+        exit(1);
     }
 
     while (wait(NULL) > 0)
         ;
     exit(1);
 
-    pthread_mutex_destroy(&shared_memory->mutex);
-    munmap(shared_memory, sizeof(SharedMemory));
-    shm_unlink("/my_shared_memory");
+    pthread_mutex_destroy(&global_shared_memory->mutex);
+    munmap(global_shared_memory, sizeof(GlobalSharedMemory));
+    shm_unlink("/global_shared_memory");
 
     return 0;
 }

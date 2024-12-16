@@ -10,6 +10,7 @@
 #include <fcntl.h>
 #include <ctype.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define MAX_PRODUCTS 1000
 #define MAX_CATEGORIES 8
@@ -417,7 +418,12 @@ void wake_score_thread()
     pthread_cond_signal(&score_cond);
     pthread_mutex_unlock(&score_mutex);
 }
-
+void reset_score_thread()
+{
+    pthread_mutex_lock(&score_mutex);
+    score_thread_should_run = 0; // بازنشانی شرط
+    pthread_mutex_unlock(&score_mutex);
+}
 void *process_scores(void *arg)
 {
     pthread_mutex_lock(&score_mutex);
@@ -445,10 +451,10 @@ void *process_scores(void *arg)
                 float rating;
                 printf("Rate the product '%s' (Price: %.2f, Current score: %.2f): ", suggested_product->name, suggested_product->price, suggested_product->score);
                 scanf("%f", &rating);
-
-                for (int cat_index = 0; cat_index < global_shared_memory->stores[store_index].category_count; cat_index++)
+                bool ok = true;
+                for (int cat_index = 0; ok && cat_index < global_shared_memory->stores[store_index].category_count; cat_index++)
                 {
-                    for (int prod_index = 0; prod_index < global_shared_memory->stores[store_index].categories[cat_index].product_count; prod_index++)
+                    for (int prod_index = 0; ok && prod_index < global_shared_memory->stores[store_index].categories[cat_index].product_count; prod_index++)
                     {
                         Product *store_product = &global_shared_memory->stores[store_index].categories[cat_index].products[prod_index];
                         if (strcasecmp(store_product->name, suggested_product->name) == 0)
@@ -461,6 +467,7 @@ void *process_scores(void *arg)
 
                             printf("Updated score for product '%s' in store '%s' to %.2f\n", store_product->name, wanted_store_name, store_product->score);
                             printf("Last modified date for product '%s': %s\n", store_product->name, store_product->last_modified);
+                            ok = false;
                             break;
                         }
                     }
@@ -469,8 +476,7 @@ void *process_scores(void *arg)
         }
     }
     pthread_mutex_unlock(&global_shared_memory->mutex);
-    pthread_mutex_lock(&private_shared_memory->mutex);
-
+    pthread_mutex_unlock(&private_shared_memory->mutex);
     return NULL;
 }
 
@@ -753,21 +759,41 @@ int main()
             memset(&private_shared_memory->user_order, 0, sizeof(UserOrder));
             private_shared_memory->user_order = user_order;
             memset(&private_shared_memory->lists, 0, sizeof(SuggestedShoppingLists));
-//           private_shared_memory->lists.shopping_lists[0].products_count = store_count;
+            //          private_shared_memory->lists.shopping_lists[0].products_count = store_count;
 
             sleep(2);
 
             printf("User Process (PID: %d)\n", getpid());
 
             pthread_t order_thread_id;
-            pthread_create(&order_thread_id, NULL, process_orders, NULL);
+            if (pthread_create(&order_thread_id, NULL, process_orders, NULL) == 0)
+            {
+                printf("PID %d created thread for Orders (TID: %lu)\n", getpid(), order_thread_id);
+            }
+            else
+            {
+                perror("Failed to create Order thread");
+            }
 
             pthread_t score_thread_id;
+            if (pthread_create(&score_thread_id, NULL, process_scores, NULL) == 0)
+            {
+                printf("PID %d created thread for Scores (TID: %lu)\n", getpid(), score_thread_id);
+            }
+            else
+            {
+                perror("Failed to create Score thread");
+            }
+
             pthread_t final_thread_id;
-
-            pthread_create(&score_thread_id, NULL, process_scores, NULL);
-            pthread_create(&final_thread_id, NULL, process_final, NULL);
-
+            if (pthread_create(&final_thread_id, NULL, process_final, NULL) == 0)
+            {
+                printf("PID %d created thread for Final (TID: %lu)\n", getpid(), final_thread_id);
+            }
+            else
+            {
+                perror("Failed to create Final thread");
+            }
             for (int m = 0; m < private_shared_memory->user_order.order_count; m++)
             {
                 for (int i = 0; i < MAX_STORES; i++)
@@ -817,6 +843,17 @@ int main()
                                     context->user_order = &private_shared_memory->user_order;
 
                                     pthread_create(&threads[thread_count], NULL, process_product, context);
+                                    // {
+                                    //     printf("PID %d created thread for product '%s' in category '%s' (TID: %lu)\n",
+                                    //            getpid(),
+                                    //            context->product->name,
+                                    //            context->category_name,
+                                    //            threads[thread_count]);
+                                    // }
+                                    // else
+                                    // {
+                                    //     perror("Failed to create thread");
+                                    // }
                                     thread_count++;
                                 }
 
@@ -832,7 +869,7 @@ int main()
                         pid_t child_pid;
                         while ((child_pid = waitpid(-1, NULL, 0)) > 0)
                         {
-                            printf("Child process PID %d finished.\n", child_pid);
+                            // printf("Child process PID %d finished.\n", child_pid);
                         }
                         exit(0);
                     }
@@ -850,13 +887,34 @@ int main()
                 if (private_shared_memory->lists.shopping_lists[j].products_count > 0)
                 {
                     printf("Suggestions for Store: %s\n", private_shared_memory->lists.shopping_lists[j].store_name);
+                    bool ok = true;
+                    float totalPrice = 0;
+
                     for (int k = 0; k < private_shared_memory->lists.shopping_lists[j].products_count; k++)
                     {
+
+                        totalPrice += private_shared_memory->lists.shopping_lists[j].products[k].price *
+                                      private_shared_memory->lists.shopping_lists[j].products[k].wanted_number;
+                        if (private_shared_memory->lists.shopping_lists[j].products[k].wanted_number >
+                            private_shared_memory->lists.shopping_lists[j].products[k].entity)
+                        {
+                            ok = false;
+                        }
+                        if (totalPrice > private_shared_memory->user_order.price_threshold)
+                            ok = false;
+                    }
+                    for (int k = 0; ok && k < private_shared_memory->lists.shopping_lists[j].products_count; k++)
+                    {
+
                         printf("Product: %s, Entity: %d, Price: %.2f, Score: %.2f\n",
                                private_shared_memory->lists.shopping_lists[j].products[k].name,
                                private_shared_memory->lists.shopping_lists[j].products[k].entity,
                                private_shared_memory->lists.shopping_lists[j].products[k].price,
                                private_shared_memory->lists.shopping_lists[j].products[k].score);
+                    }
+                    if (!ok)
+                    {
+                        printf("There is not enough stock for a requested item or your amount of money is insufficient\n");
                     }
                     printf("\n");
                 }
@@ -892,16 +950,15 @@ int main()
             }
 
             sleep(5);
-
             wake_score_thread();
-            if (pthread_join(score_thread_id, NULL) != 0)
+                 if (pthread_join(score_thread_id, NULL) != 0)
             {
                 perror("Failed to join score_thread_id");
             }
 
-            sleep(1);
+            sleep(2);
 
-            while (wait(NULL) > 0)
+             while (wait(NULL) > 0)
                 ;
             printf("User %s processing completed.\n", user_order.username);
             pthread_mutex_destroy(&private_shared_memory->mutex);

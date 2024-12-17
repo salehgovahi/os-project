@@ -600,56 +600,62 @@ int user_process(int store_count, const char *output_directory)
         wake_order_thread();
 
         sleep(5);
-
-        char wanted_list_store_name[MAX_NAME_LENGTH];
-        while (true)
+        if (private_shared_memory->lists.shopping_lists[0].can_buy || private_shared_memory->lists.shopping_lists[0].can_buy ||
+            private_shared_memory->lists.shopping_lists[0].can_buy)
         {
-            printf("Enter the name of the store to finalize your purchase: ");
-            scanf(" %[^\n]", wanted_list_store_name);
-            if(strcmp(wanted_list_store_name,"Store1")!=0 && strcmp(wanted_list_store_name,"Store3")!=0 &&
-                strcmp(wanted_list_store_name,"Store2")!=0){
+            char wanted_list_store_name[MAX_NAME_LENGTH];
+            while (true)
+            {
+                printf("Enter the name of the store to finalize your purchase: ");
+                scanf(" %[^\n]", wanted_list_store_name);
+                if (strcmp(wanted_list_store_name, "Store1") != 0 && strcmp(wanted_list_store_name, "Store3") != 0 &&
+                    strcmp(wanted_list_store_name, "Store2") != 0)
+                {
                     printf("there is no Store with this name\n");
                     continue;
                 }
-            if (private_shared_memory->lists.shopping_lists[wanted_list_store_name[5] - '1'].can_buy)
-                break;
-            printf("You cant Buy from this Store.\n");
+                if (private_shared_memory->lists.shopping_lists[wanted_list_store_name[5] - '1'].can_buy)
+                    break;
+                printf("You cant Buy from this Store.\n");
+            }
+            pthread_mutex_lock(&private_shared_memory->mutex);
+            strncpy(private_shared_memory->wanted_list_store_name, wanted_list_store_name, sizeof(private_shared_memory->wanted_list_store_name));
+            pthread_mutex_unlock(&private_shared_memory->mutex);
+
+            if (sscanf(wanted_list_store_name, " %[^\n]", private_shared_memory->wanted_list_store_name) != 1)
+            {
+                fprintf(stderr, "Error capturing store name.\n");
+            }
+
+            pthread_mutex_unlock(&private_shared_memory->mutex);
+
+            sleep(5);
+
+            wake_final_thread();
+            if (pthread_join(final_thread_id, NULL) != 0)
+            {
+                perror("Failed to join final_thread_id");
+            }
+
+            sleep(5);
+            wake_score_thread();
+            if (pthread_join(score_thread_id, NULL) != 0)
+            {
+                perror("Failed to join score_thread_id");
+            }
+
+            sleep(2);
+
+            while (wait(NULL) > 0)
+                ;
+            printf("User %s processing completed.\n", user_order.username);
+            pthread_mutex_destroy(&private_shared_memory->mutex);
+            munmap(private_shared_memory, sizeof(PrivateSharedMemory));
+            shm_unlink("/private_shared_memory");
+            exit(0);
         }
-        pthread_mutex_lock(&private_shared_memory->mutex);
-        strncpy(private_shared_memory->wanted_list_store_name, wanted_list_store_name, sizeof(private_shared_memory->wanted_list_store_name));
-        pthread_mutex_unlock(&private_shared_memory->mutex);
-
-        if (sscanf(wanted_list_store_name, " %[^\n]", private_shared_memory->wanted_list_store_name) != 1)
-        {
-            fprintf(stderr, "Error capturing store name.\n");
-        }
-
-        pthread_mutex_unlock(&private_shared_memory->mutex);
-
-        sleep(5);
-
-        wake_final_thread();
-        if (pthread_join(final_thread_id, NULL) != 0)
-        {
-            perror("Failed to join final_thread_id");
-        }
-
-        sleep(5);
-        wake_score_thread();
-        if (pthread_join(score_thread_id, NULL) != 0)
-        {
-            perror("Failed to join score_thread_id");
-        }
-
-        sleep(2);
-
-        while (wait(NULL) > 0)
-            ;
-        printf("User %s processing completed.\n", user_order.username);
-        pthread_mutex_destroy(&private_shared_memory->mutex);
-        munmap(private_shared_memory, sizeof(PrivateSharedMemory));
-        shm_unlink("/private_shared_memory");
-        exit(0);
+        else 
+            printf("sorry you can't buy from any shop.\n");
     }
     while (wait(NULL) > 0)
         ;

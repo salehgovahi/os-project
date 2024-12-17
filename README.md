@@ -1,8 +1,8 @@
-# Project README: Multi-Store Shopping System
+# Multi-thread and multi-process Shopping System
 
 ## Overview
 
-The Multi-Store Shopping System is an application designed to manage a shopping experience across multiple stores, providing functionalities for users to browse categories, order products, and finalize purchases. The application operates with simultaneous user processes and invocations using threads, enabling a smooth experience in a multi-user environment.
+The Multi-thread and multi-process Shopping Systemis a midterm project designed for the Operating Systems course. This application allows users to interact with multiple virtual stores, managing orders and product information in a concurrent environment. The project showcases important operating system concepts such as processes, threads, shared memory, and synchronization mechanisms.
 
 Users can place orders, receive suggestions based on their inputs, and see real-time updates on product availability, pricing, scores, and other crucial details.
 

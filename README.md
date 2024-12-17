@@ -3,7 +3,6 @@
 ## Overview
 
 The Multi-thread and multi-process Shopping Systemis a midterm project designed for the Operating Systems course. This application allows users to interact with multiple virtual stores, managing orders and product information in a concurrent environment. The project showcases important operating system concepts such as processes, threads, shared memory, and synchronization mechanisms.
-
 Users can place orders, receive suggestions based on their inputs, and see real-time updates on product availability, pricing, scores, and other crucial details.
 
 ## Features

@@ -74,6 +74,7 @@ typedef struct
     char store_name[MAX_NAME_LENGTH];
     SuggestedProduct products[MAX_PRODUCTS];
     int products_count;
+    bool can_buy;
 } ShoppingList;
 
 typedef struct

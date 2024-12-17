@@ -340,7 +340,6 @@ void *process_final(void *arg)
     return NULL;
 }
 
-
 int user_process(int store_count, const char *output_directory)
 {
     printf("Enter 'exit' to quit or press ENTER to continue for a new user.\n");
@@ -569,7 +568,7 @@ int user_process(int store_count, const char *output_directory)
                 printf("Suggestions for Store: %s\n", private_shared_memory->lists.shopping_lists[j].store_name);
                 bool ok = true;
                 float totalPrice = 0;
-
+                private_shared_memory->lists.shopping_lists[j].can_buy = true;
                 for (int k = 0; k < private_shared_memory->lists.shopping_lists[j].products_count; k++)
                 {
 
@@ -578,12 +577,12 @@ int user_process(int store_count, const char *output_directory)
                     if (private_shared_memory->lists.shopping_lists[j].products[k].wanted_number >
                         private_shared_memory->lists.shopping_lists[j].products[k].entity)
                     {
-                        ok = false;
+                        private_shared_memory->lists.shopping_lists[j].can_buy = false;
                     }
                     if (totalPrice > private_shared_memory->user_order.price_threshold)
-                        ok = false;
+                        private_shared_memory->lists.shopping_lists[j].can_buy = false;
                 }
-                for (int k = 0; ok && k < private_shared_memory->lists.shopping_lists[j].products_count; k++)
+                for (int k = 0; k < private_shared_memory->lists.shopping_lists[j].products_count; k++)
                 {
 
                     printf("Product: %s, Entity: %d, Price: %.2f, Score: %.2f\n",
@@ -591,10 +590,6 @@ int user_process(int store_count, const char *output_directory)
                            private_shared_memory->lists.shopping_lists[j].products[k].entity,
                            private_shared_memory->lists.shopping_lists[j].products[k].price,
                            private_shared_memory->lists.shopping_lists[j].products[k].score);
-                }
-                if (!ok)
-                {
-                    printf("There is not enough stock for a requested item or your amount of money is insufficient\n");
                 }
                 printf("\n");
             }
@@ -607,9 +602,19 @@ int user_process(int store_count, const char *output_directory)
         sleep(5);
 
         char wanted_list_store_name[MAX_NAME_LENGTH];
-        printf("Enter the name of the store to finalize your purchase: ");
-        scanf(" %[^\n]", wanted_list_store_name);
-
+        while (true)
+        {
+            printf("Enter the name of the store to finalize your purchase: ");
+            scanf(" %[^\n]", wanted_list_store_name);
+            if(strcmp(wanted_list_store_name,"Store1")!=0 && strcmp(wanted_list_store_name,"Store3")!=0 &&
+                strcmp(wanted_list_store_name,"Store2")!=0){
+                    printf("there is no Store with this name\n");
+                    continue;
+                }
+            if (private_shared_memory->lists.shopping_lists[wanted_list_store_name[5] - '1'].can_buy)
+                break;
+            printf("You cant Buy from this Store.\n");
+        }
         pthread_mutex_lock(&private_shared_memory->mutex);
         strncpy(private_shared_memory->wanted_list_store_name, wanted_list_store_name, sizeof(private_shared_memory->wanted_list_store_name));
         pthread_mutex_unlock(&private_shared_memory->mutex);
